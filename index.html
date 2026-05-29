@@ -1,0 +1,1453 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vela Textile · Digital Product Passport Prototype</title>
+  <meta name="description" content="One-page Digital Product Passport prototype for Vela Textile, designed for a non-technical Sustainability Manager under ESPR/DPP logic." />
+  <style>
+    :root {
+      --ink: #0c1411;
+      --muted: #64716b;
+      --soft: #eef3ef;
+      --paper: #fbfaf5;
+      --card: rgba(255, 255, 255, 0.88);
+      --line: rgba(12, 20, 17, 0.12);
+      --green: #0f6b4f;
+      --green-2: #0b8d66;
+      --mint: #dff5ea;
+      --amber: #a76109;
+      --amber-bg: #fff2d9;
+      --rose: #9d2638;
+      --rose-bg: #ffe5e9;
+      --blue: #215c90;
+      --blue-bg: #e7f2ff;
+      --shadow: 0 24px 70px rgba(12, 20, 17, 0.13);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--paper);
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 8% 2%, rgba(15, 107, 79, 0.18), transparent 28rem),
+        radial-gradient(circle at 92% 0%, rgba(167, 97, 9, 0.13), transparent 30rem),
+        linear-gradient(180deg, #fbfaf5 0%, #f5f2e9 42%, #edf3ee 100%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(12, 20, 17, 0.1);
+      background: rgba(251, 250, 245, 0.82);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav-shell {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 245px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, var(--green), #12352a);
+      box-shadow: 0 12px 28px rgba(15, 107, 79, 0.22);
+    }
+
+    .brand-title {
+      font-weight: 850;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+    }
+
+    .brand-subtitle {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      display: inline-flex;
+      align-items: center;
+      height: 34px;
+      padding: 0 11px;
+      border-radius: 999px;
+      color: #40504a;
+      font-size: 12px;
+      font-weight: 780;
+      transition: all .2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background: #12352a;
+      color: white;
+    }
+
+    .header-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(15, 107, 79, 0.18);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: var(--green);
+      background: rgba(223, 245, 234, 0.75);
+      font-size: 12px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    main { overflow: hidden; }
+
+    .section {
+      position: relative;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 92px 22px;
+    }
+
+    .section.compact { padding-top: 56px; }
+
+    .hero {
+      min-height: calc(100vh - 72px);
+      display: grid;
+      align-items: center;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 44px;
+      padding-top: 72px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(15, 107, 79, 0.2);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: var(--green);
+      background: rgba(223, 245, 234, 0.7);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      margin-top: 22px;
+      font-size: clamp(46px, 7vw, 84px);
+      line-height: 0.92;
+      letter-spacing: -0.075em;
+      max-width: 850px;
+    }
+
+    .hero-copy {
+      margin-top: 24px;
+      max-width: 710px;
+      color: #42544c;
+      font-size: 18px;
+      line-height: 1.65;
+      font-weight: 560;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 46px;
+      border-radius: 999px;
+      padding: 0 18px;
+      font-weight: 850;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    .button:hover { transform: translateY(-1px); }
+
+    .button.primary {
+      color: white;
+      background: #0c1411;
+      box-shadow: 0 14px 28px rgba(12, 20, 17, 0.18);
+    }
+
+    .button.secondary {
+      color: #12352a;
+      background: rgba(255, 255, 255, 0.7);
+      border-color: var(--line);
+    }
+
+    .hero-card {
+      position: relative;
+      border: 1px solid rgba(12, 20, 17, 0.12);
+      border-radius: 36px;
+      background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.62));
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .product-visual {
+      min-height: 390px;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 35% 18%, rgba(255,255,255,0.92), transparent 26%),
+        linear-gradient(145deg, #dce9df 0%, #eff5ed 48%, #d8e7db 100%);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-visual::before,
+    .product-visual::after {
+      content: "";
+      position: absolute;
+      width: 210px;
+      height: 210px;
+      border-radius: 999px;
+      background: rgba(15, 107, 79, 0.1);
+      filter: blur(4px);
+    }
+
+    .product-visual::before { left: -75px; top: -55px; }
+    .product-visual::after { right: -85px; bottom: -70px; background: rgba(167, 97, 9, .1); }
+
+    .tshirt {
+      width: 260px;
+      height: 260px;
+      position: relative;
+      z-index: 2;
+      filter: drop-shadow(0 35px 35px rgba(12,20,17,.16));
+    }
+
+    .tshirt svg { width: 100%; height: 100%; display: block; }
+
+    .floating-badge {
+      position: absolute;
+      z-index: 3;
+      border-radius: 18px;
+      border: 1px solid rgba(12, 20, 17, 0.12);
+      background: rgba(255,255,255,.82);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 14px 36px rgba(12, 20, 17, 0.12);
+      padding: 12px 14px;
+      font-size: 12px;
+      font-weight: 850;
+      color: #12352a;
+    }
+
+    .floating-badge.one { left: 22px; top: 24px; }
+    .floating-badge.two { right: 22px; top: 78px; color: var(--amber); }
+    .floating-badge.three { left: 34px; bottom: 24px; color: var(--green); }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .meta-tile {
+      border-radius: 20px;
+      background: rgba(255,255,255,.68);
+      border: 1px solid rgba(12,20,17,.1);
+      padding: 15px;
+    }
+
+    .meta-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: .11em;
+    }
+
+    .meta-value {
+      margin-top: 7px;
+      font-weight: 900;
+      letter-spacing: -.02em;
+    }
+
+    .section-heading {
+      max-width: 800px;
+      margin-bottom: 34px;
+    }
+
+    .section-heading.center {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .kicker {
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin-top: 10px;
+      font-size: clamp(32px, 4.4vw, 56px);
+      line-height: .98;
+      letter-spacing: -.06em;
+    }
+
+    .section-lead {
+      margin-top: 15px;
+      color: #4a5c54;
+      font-size: 17px;
+      line-height: 1.6;
+      font-weight: 540;
+    }
+
+    .grid { display: grid; gap: 18px; }
+    .grid.two { grid-template-columns: repeat(2, 1fr); }
+    .grid.three { grid-template-columns: repeat(3, 1fr); }
+    .grid.four { grid-template-columns: repeat(4, 1fr); }
+
+    .card {
+      border: 1px solid rgba(12, 20, 17, 0.11);
+      border-radius: var(--radius-xl);
+      background: var(--card);
+      box-shadow: 0 16px 45px rgba(12, 20, 17, 0.075);
+      padding: 24px;
+    }
+
+    .card.dark {
+      color: white;
+      background: #0c1411;
+      border-color: rgba(255,255,255,.1);
+    }
+
+    .card.soft {
+      background: rgba(223, 245, 234, 0.46);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 950;
+      letter-spacing: -.03em;
+    }
+
+    .card-copy {
+      margin-top: 10px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+      font-weight: 540;
+    }
+
+    .dark .card-copy { color: rgba(255,255,255,.72); }
+
+    .big-number {
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      margin-top: 18px;
+      font-size: 42px;
+      font-weight: 950;
+      letter-spacing: -.06em;
+    }
+
+    .big-number span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: 0;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 7px 10px;
+      border: 1px solid transparent;
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: .02em;
+      white-space: nowrap;
+    }
+
+    .pill.green { color: var(--green); background: var(--mint); border-color: rgba(15,107,79,.16); }
+    .pill.amber { color: var(--amber); background: var(--amber-bg); border-color: rgba(167,97,9,.18); }
+    .pill.rose { color: var(--rose); background: var(--rose-bg); border-color: rgba(157,38,56,.18); }
+    .pill.blue { color: var(--blue); background: var(--blue-bg); border-color: rgba(33,92,144,.18); }
+    .pill.gray { color: #4d5b55; background: #eef0ed; border-color: var(--line); }
+
+    .snapshot {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .identity-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .identity-item {
+      border-radius: 18px;
+      background: rgba(255,255,255,.64);
+      border: 1px solid rgba(12, 20, 17, 0.1);
+      padding: 15px;
+    }
+
+    .identity-item strong {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 7px;
+    }
+
+    .identity-item span {
+      font-weight: 850;
+      word-break: break-word;
+    }
+
+    .status-board {
+      display: grid;
+      gap: 10px;
+    }
+
+    .status-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 12px;
+      border-radius: 17px;
+      background: rgba(255,255,255,.62);
+      border: 1px solid rgba(12, 20, 17, 0.09);
+      padding: 13px 14px;
+    }
+
+    .status-row strong { font-size: 13px; }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      gap: 18px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 31px;
+      top: 32px;
+      bottom: 32px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--green), rgba(15,107,79,.12));
+    }
+
+    .timeline-step {
+      position: relative;
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .step-index {
+      position: relative;
+      z-index: 2;
+      width: 64px;
+      height: 64px;
+      border-radius: 21px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: #0c1411;
+      font-weight: 950;
+      box-shadow: 0 14px 28px rgba(12,20,17,.18);
+    }
+
+    .step-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(12,20,17,.11);
+      background: rgba(255,255,255,.78);
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+    }
+
+    .step-title {
+      font-size: 19px;
+      font-weight: 950;
+      letter-spacing: -.03em;
+    }
+
+    .step-meta {
+      margin-top: 8px;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 14px;
+      font-weight: 560;
+    }
+
+    .step-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      align-content: start;
+    }
+
+    .bar-list { display: grid; gap: 15px; }
+
+    .material-row {
+      border-radius: 22px;
+      border: 1px solid rgba(12,20,17,.1);
+      background: rgba(255,255,255,.68);
+      padding: 18px;
+    }
+
+    .material-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .material-name { font-weight: 950; }
+    .material-origin { margin-top: 5px; color: var(--muted); font-size: 13px; line-height: 1.4; }
+    .material-percent { font-size: 30px; font-weight: 950; letter-spacing: -.05em; }
+
+    .bar {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(12,20,17,.08);
+      margin-top: 14px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--green), #46c28c);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 24px;
+      border: 1px solid rgba(12,20,17,.11);
+      background: rgba(255,255,255,.74);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 860px;
+      font-size: 14px;
+    }
+
+    th {
+      padding: 14px 16px;
+      text-align: left;
+      color: #58675f;
+      background: rgba(238,243,239,.86);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      font-weight: 950;
+    }
+
+    td {
+      padding: 16px;
+      border-top: 1px solid rgba(12,20,17,.09);
+      vertical-align: top;
+      color: #40504a;
+      font-weight: 560;
+    }
+
+    td:first-child {
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    .logic-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .impact-card {
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .metric-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: var(--mint);
+      color: var(--green);
+      font-size: 22px;
+    }
+
+    .progress-ring {
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      margin-left: auto;
+      background: conic-gradient(var(--green) var(--pct), rgba(12,20,17,.08) 0);
+    }
+
+    .progress-ring::after {
+      content: attr(data-label);
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #fffaf2;
+      font-weight: 950;
+      color: var(--ink);
+      letter-spacing: -.03em;
+    }
+
+    .split-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .qr-panel {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .fake-qr {
+      width: 230px;
+      height: 230px;
+      border-radius: 34px;
+      padding: 20px;
+      background: white;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      grid-template-rows: repeat(7, 1fr);
+      gap: 7px;
+      box-shadow: inset 0 0 0 1px rgba(12,20,17,.1), 0 22px 45px rgba(12,20,17,.2);
+    }
+
+    .fake-qr span {
+      border-radius: 6px;
+      background: #0c1411;
+      opacity: .14;
+    }
+
+    .fake-qr span.on { opacity: 1; }
+
+    .public-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .public-list li {
+      list-style: none;
+      display: flex;
+      gap: 10px;
+      align-items: start;
+      color: rgba(255,255,255,.82);
+      line-height: 1.45;
+      font-weight: 620;
+    }
+
+    .public-list li::before {
+      content: "✓";
+      display: grid;
+      place-items: center;
+      flex: 0 0 22px;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      color: #0c1411;
+      background: #9de9bf;
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .note-box {
+      margin-top: 26px;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(15,107,79,.18);
+      background: rgba(223,245,234,.58);
+      padding: 24px;
+    }
+
+    .note-box h3 {
+      font-size: 18px;
+      font-weight: 950;
+      letter-spacing: -.03em;
+    }
+
+    .note-box p {
+      margin-top: 10px;
+      color: #365047;
+      line-height: 1.6;
+      font-weight: 600;
+    }
+
+    .footer {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 46px 22px 72px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      border-top: 1px solid rgba(12,20,17,.1);
+    }
+
+
+
+    /* Motion layer: one-page scroll polish */
+    html { scroll-padding-top: 88px; }
+
+    ::selection {
+      color: white;
+      background: var(--green);
+    }
+
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      z-index: 999;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .scroll-progress span {
+      display: block;
+      width: var(--progress, 0%);
+      height: 100%;
+      background: linear-gradient(90deg, #0f6b4f, #5bd39a, #a76109);
+      box-shadow: 0 0 20px rgba(15,107,79,.35);
+      transition: width .12s linear;
+    }
+
+    .ambient-orb {
+      position: fixed;
+      width: 340px;
+      height: 340px;
+      border-radius: 999px;
+      pointer-events: none;
+      filter: blur(42px);
+      opacity: .23;
+      z-index: 0;
+      transform: translate3d(0,0,0);
+      animation: floatOrb 14s ease-in-out infinite alternate;
+    }
+
+    .orb-one {
+      left: -120px;
+      top: 18vh;
+      background: rgba(15,107,79,.42);
+    }
+
+    .orb-two {
+      right: -130px;
+      top: 62vh;
+      background: rgba(167,97,9,.34);
+      animation-delay: -5s;
+    }
+
+    .site-header, main, .footer { position: relative; z-index: 1; }
+
+    @keyframes floatOrb {
+      0% { transform: translate3d(0,0,0) scale(1); }
+      100% { transform: translate3d(32px,-26px,0) scale(1.08); }
+    }
+
+    .hero-card {
+      transform: translate3d(0, var(--hero-shift, 0px), 0) rotate(var(--hero-rotate, 0deg));
+      transition: transform .2s linear;
+      will-change: transform;
+    }
+
+    .tshirt {
+      animation: tshirtFloat 5.5s ease-in-out infinite;
+    }
+
+    @keyframes tshirtFloat {
+      0%, 100% { transform: translateY(0) rotate(-.5deg); }
+      50% { transform: translateY(-10px) rotate(.7deg); }
+    }
+
+    .floating-badge {
+      animation: badgeFloat 4.8s ease-in-out infinite;
+    }
+
+    .floating-badge.two { animation-delay: -1.4s; }
+    .floating-badge.three { animation-delay: -2.7s; }
+
+    @keyframes badgeFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .button:active { transform: translateY(0) scale(.98); }
+
+    .card, .step-card, .status-row, .material-row, .table-wrap {
+      transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease, background .28s ease;
+    }
+
+    .card:hover, .step-card:hover, .material-row:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 22px 60px rgba(12, 20, 17, 0.12);
+      border-color: rgba(15, 107, 79, 0.22);
+    }
+
+    .micro-reveal {
+      opacity: 0;
+      transform: translateY(22px) scale(.985);
+      filter: blur(7px);
+      transition: opacity .72s cubic-bezier(.22,1,.36,1), transform .72s cubic-bezier(.22,1,.36,1), filter .72s cubic-bezier(.22,1,.36,1);
+      transition-delay: var(--delay, 0ms);
+      will-change: opacity, transform, filter;
+    }
+
+    .micro-reveal.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px) scale(.985);
+      filter: blur(8px);
+      transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1), filter .9s cubic-bezier(.22,1,.36,1);
+      transition-delay: var(--delay, 0ms);
+      will-change: opacity, transform, filter;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+
+    .bar-fill {
+      width: 0 !important;
+      transition: width 1.15s cubic-bezier(.22,1,.36,1);
+      transition-delay: .18s;
+    }
+
+    .bar-fill.visible {
+      width: var(--target-width) !important;
+    }
+
+    .progress-ring {
+      --animated-pct: 0%;
+      background: conic-gradient(var(--green) var(--animated-pct), rgba(12,20,17,.08) 0);
+      transition: transform .4s ease;
+    }
+
+    .progress-ring.visible {
+      animation: ringPop .7s cubic-bezier(.22,1,.36,1) both;
+      background: conic-gradient(var(--green) var(--pct), rgba(12,20,17,.08) 0);
+    }
+
+    @keyframes ringPop {
+      0% { transform: scale(.88); opacity: .4; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .timeline::before {
+      transform-origin: top;
+      transform: scaleY(var(--line-progress, 0));
+      transition: transform 1.2s cubic-bezier(.22,1,.36,1);
+    }
+
+    .timeline.visible::before { --line-progress: 1; }
+
+    .step-index {
+      transition: transform .4s cubic-bezier(.22,1,.36,1), background .4s ease;
+    }
+
+    .timeline-step.visible .step-index {
+      transform: scale(1.04);
+      background: linear-gradient(135deg, #0f6b4f, #0c1411);
+    }
+
+    .table-wrap tbody tr {
+      transition: background .2s ease, transform .2s ease;
+    }
+
+    .table-wrap tbody tr:hover {
+      background: rgba(223,245,234,.38);
+    }
+
+    .public-list li {
+      opacity: 0;
+      transform: translateX(-12px);
+      transition: opacity .55s ease, transform .55s ease;
+      transition-delay: var(--delay, 0ms);
+    }
+
+    .card.dark.visible .public-list li {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .001ms !important;
+      }
+      .reveal, .micro-reveal, .bar-fill, .progress-ring, .public-list li {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+      }
+      .bar-fill { width: var(--target-width, auto) !important; }
+      .timeline::before { transform: scaleY(1) !important; }
+    }
+
+    @media (max-width: 1040px) {
+      .hero, .snapshot, .split-panel, .qr-panel { grid-template-columns: 1fr; }
+      .grid.four { grid-template-columns: repeat(2, 1fr); }
+      .nav-shell { align-items: flex-start; }
+      .nav-links { display: none; }
+      .header-status { display: none; }
+      .hero { min-height: auto; }
+    }
+
+    @media (max-width: 740px) {
+      .section { padding: 68px 16px; }
+      .hero { padding-top: 46px; }
+      .grid.two, .grid.three, .grid.four, .identity-list, .logic-grid { grid-template-columns: 1fr; }
+      .hero-meta { grid-template-columns: 1fr; }
+      .step-card { grid-template-columns: 1fr; }
+      .step-tags { justify-content: flex-start; }
+      .timeline-step { grid-template-columns: 48px 1fr; gap: 12px; }
+      .timeline::before { left: 23px; }
+      .step-index { width: 48px; height: 48px; border-radius: 16px; }
+      .product-visual { min-height: 310px; }
+      .tshirt { width: 210px; height: 210px; }
+      .floating-badge.two { display: none; }
+      .fake-qr { width: 100%; max-width: 230px; height: auto; aspect-ratio: 1; }
+      .nav-shell { padding-inline: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+  <div class="ambient-orb orb-one" aria-hidden="true"></div>
+  <div class="ambient-orb orb-two" aria-hidden="true"></div>
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="brand" href="#top" aria-label="Vela Textile DPP prototype home">
+        <div class="brand-mark">VT</div>
+        <div>
+          <div class="brand-title">Vela Textile DPP</div>
+          <div class="brand-subtitle">One-page scroll prototype</div>
+        </div>
+      </a>
+      <nav class="nav-links" aria-label="Page sections">
+        <a href="#overview">Overview</a>
+        <a href="#identity">Identity</a>
+        <a href="#chain">Supply chain</a>
+        <a href="#evidence">Evidence</a>
+        <a href="#impact">Impact</a>
+        <a href="#compliance">Compliance</a>
+        <a href="#public">Public QR</a>
+      </nav>
+      <div class="header-status"><span>●</span> Ready for anchor-client review</div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="section hero">
+      <div class="reveal">
+        <div class="eyebrow">ESPR / DPP user experience case</div>
+        <h1>Digital Product Passport for a non-technical Sustainability Manager.</h1>
+        <p class="hero-copy">
+          A one-page prototype for Vela Textile’s unisex organic cotton t-shirt. The design converts regulatory product data into an operational experience: what is complete, what is verified, what is missing, and what action comes next.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#evidence">View verification layer</a>
+          <a class="button secondary" href="#overview">Start with DPP readiness</a>
+        </div>
+      </div>
+
+      <aside class="hero-card reveal" aria-label="Product passport summary">
+        <div class="product-visual">
+          <div class="floating-badge one">82% verification complete</div>
+          <div class="floating-badge two">2 blocks need action</div>
+          <div class="floating-badge three">Public QR ready</div>
+          <div class="tshirt" aria-hidden="true">
+            <svg viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M100 45L62 64C47 72 39 88 44 104L58 151L88 142V245C88 258 98 268 111 268H189C202 268 212 258 212 245V142L242 151L256 104C261 88 253 72 238 64L200 45C190 59 173 68 150 68C127 68 110 59 100 45Z" fill="#fbfaf5" stroke="#0c1411" stroke-width="8"/>
+              <path d="M116 51C123 73 135 84 150 84C165 84 177 73 184 51" stroke="#0f6b4f" stroke-width="8" stroke-linecap="round"/>
+              <path d="M112 128H188" stroke="#d6cbbb" stroke-width="8" stroke-linecap="round"/>
+              <path d="M112 154H188" stroke="#d6cbbb" stroke-width="8" stroke-linecap="round"/>
+              <path d="M112 180H168" stroke="#d6cbbb" stroke-width="8" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="hero-meta">
+          <div class="meta-tile"><div class="meta-label">Product UID</div><div class="meta-value">DPP-VT-CAM-001-2026</div></div>
+          <div class="meta-tile"><div class="meta-label">Batch UID</div><div class="meta-value">BATCH-VT-0426-A</div></div>
+          <div class="meta-tile"><div class="meta-label">Footprint</div><div class="meta-value">8.5 kg CO₂eq</div></div>
+          <div class="meta-tile"><div class="meta-label">Durability</div><div class="meta-value">50 washes</div></div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="overview" class="section compact">
+      <div class="section-heading center reveal">
+        <div class="kicker">Operational overview</div>
+        <h2>Start with readiness, not regulation.</h2>
+        <p class="section-lead">The first screen tells the Sustainability Manager whether the DPP can be trusted, where the evidence is weak, and what needs attention before a client, auditor or public user consumes the passport.</p>
+      </div>
+
+      <div class="grid four reveal">
+        <article class="card">
+          <span class="pill blue">In progress</span>
+          <div class="big-number">82<span>% complete</span></div>
+          <p class="card-copy">Seven of nine DPP blocks have sufficient evidence for first review.</p>
+        </article>
+        <article class="card">
+          <span class="pill green">No critical gap</span>
+          <div class="big-number">0<span>critical issues</span></div>
+          <p class="card-copy">No blocking findings, but two fields require stronger evidence.</p>
+        </article>
+        <article class="card">
+          <span class="pill green">Declared</span>
+          <div class="big-number">8.5<span>kg CO₂eq</span></div>
+          <p class="card-copy">Environmental footprint shown with source and confidence level.</p>
+        </article>
+        <article class="card">
+          <span class="pill amber">Next review</span>
+          <div class="big-number">30<span>Sep 2026</span></div>
+          <p class="card-copy">Evidence refresh date before the next certification window.</p>
+        </article>
+      </div>
+
+      <div class="grid two" style="margin-top:18px;">
+        <div class="card reveal">
+          <h3 class="card-title">DPP block status</h3>
+          <p class="card-copy">The nine ESPR-facing blocks become a simple operating board.</p>
+          <div class="status-board" style="margin-top:18px;">
+            <div class="status-row"><strong>Identification</strong><span class="pill green">Complete</span></div>
+            <div class="status-row"><strong>Origin & production</strong><span class="pill green">Complete</span></div>
+            <div class="status-row"><strong>Composition</strong><span class="pill green">Complete</span></div>
+            <div class="status-row"><strong>Traceability</strong><span class="pill amber">Needs review</span></div>
+            <div class="status-row"><strong>Durability & repairability</strong><span class="pill green">Complete</span></div>
+            <div class="status-row"><strong>Environmental impact</strong><span class="pill green">Complete</span></div>
+            <div class="status-row"><strong>End of life</strong><span class="pill amber">Partial</span></div>
+            <div class="status-row"><strong>Compliance</strong><span class="pill rose">Needs evidence</span></div>
+            <div class="status-row"><strong>Metadata</strong><span class="pill green">Complete</span></div>
+          </div>
+        </div>
+        <div class="card dark reveal">
+          <span class="pill green">Next best actions</span>
+          <h3 style="margin-top:18px;font-size:34px;line-height:1;letter-spacing:-.05em;">Designed for one Sustainability Manager, not a large compliance department.</h3>
+          <p class="card-copy">The interface prioritizes the minimum actions needed to move the DPP from “documented” to “review-ready”.</p>
+          <div class="status-board" style="margin-top:22px;">
+            <div class="status-row" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.1);"><strong>Attach batch-level evidence for recycled polyester.</strong><span class="pill amber">Action</span></div>
+            <div class="status-row" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.1);"><strong>Confirm finishing-stage chemical declaration.</strong><span class="pill amber">Action</span></div>
+            <div class="status-row" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.1);"><strong>Complete EUDR applicability assessment.</strong><span class="pill gray">Assess</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="identity" class="section">
+      <div class="section-heading reveal">
+        <div class="kicker">Identification</div>
+        <h2>Product identity as the passport anchor.</h2>
+        <p class="section-lead">Stable identifiers link the public product record, internal SKU, production batch, QR code and evidence package.</p>
+      </div>
+
+      <div class="snapshot">
+        <div class="card soft reveal">
+          <span class="pill green">Product record</span>
+          <h3 style="margin-top:18px;font-size:32px;line-height:1.05;letter-spacing:-.05em;">Unisex Organic Cotton T-Shirt</h3>
+          <p class="card-copy">Reference VT-CAM-001 · B2C + B2B distribution · 220 SKU portfolio.</p>
+          <div class="big-number">50<span>washes expected durability</span></div>
+        </div>
+        <div class="card reveal">
+          <div class="identity-list">
+            <div class="identity-item"><strong>Product UID</strong><span>DPP-VT-CAM-001-2026</span></div>
+            <div class="identity-item"><strong>Batch UID</strong><span>BATCH-VT-0426-A</span></div>
+            <div class="identity-item"><strong>SKU</strong><span>VT-CAM-001</span></div>
+            <div class="identity-item"><strong>GTIN</strong><span>8430000000012</span></div>
+            <div class="identity-item"><strong>Issue date</strong><span>01 Jun 2026</span></div>
+            <div class="identity-item"><strong>Last update</strong><span>10 Jun 2026</span></div>
+            <div class="identity-item"><strong>Responsible operator</strong><span>Vela Textile S.L.</span></div>
+            <div class="identity-item"><strong>DPP owner</strong><span>Sustainability Manager</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="chain" class="section">
+      <div class="section-heading reveal">
+        <div class="kicker">Origin & production</div>
+        <h2>A 5-stage supply chain that can be read at a glance.</h2>
+        <p class="section-lead">A vertical chain-of-custody timeline makes diversified sourcing visible without forcing the user into supplier files first.</p>
+      </div>
+
+      <div class="timeline reveal">
+        <div class="timeline-step">
+          <div class="step-index">1</div>
+          <div class="step-card"><div><div class="step-title">Ginning · Türkiye</div><div class="step-meta">Anatolia Cotton Processing Ltd. · 14 Feb 2026 · Supplier declaration + organic cotton lot reference.</div></div><div class="step-tags"><span class="pill amber">Medium confidence</span><span class="pill green">Verified</span></div></div>
+        </div>
+        <div class="timeline-step">
+          <div class="step-index">2</div>
+          <div class="step-card"><div><div class="step-title">Spinning · Portugal</div><div class="step-meta">Porto Sustainable Yarns SA · 21 Feb 2026 · GOTS transaction certificate.</div></div><div class="step-tags"><span class="pill green">High confidence</span><span class="pill green">Verified</span></div></div>
+        </div>
+        <div class="timeline-step">
+          <div class="step-index">3</div>
+          <div class="step-card"><div><div class="step-title">Weaving · Morocco</div><div class="step-meta">Atlas Weave Factory · 03 Mar 2026 · Production order + supplier declaration.</div></div><div class="step-tags"><span class="pill amber">Medium confidence</span><span class="pill green">Verified</span></div></div>
+        </div>
+        <div class="timeline-step">
+          <div class="step-index">4</div>
+          <div class="step-card"><div><div class="step-title">Confection · Tunisia</div><div class="step-meta">Sahel Garment Works · 12 Mar 2026 · Factory audit + batch production record.</div></div><div class="step-tags"><span class="pill green">High confidence</span><span class="pill green">Verified</span></div></div>
+        </div>
+        <div class="timeline-step">
+          <div class="step-index">5</div>
+          <div class="step-card"><div><div class="step-title">Finishing · Spain</div><div class="step-meta">Valencia Textile Finishers SL · 19 Mar 2026 · Chemical declaration pending final QA match.</div></div><div class="step-tags"><span class="pill amber">Medium confidence</span><span class="pill amber">Needs review</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="composition" class="section">
+      <div class="section-heading reveal">
+        <div class="kicker">Composition</div>
+        <h2>Material facts separated from evidence quality.</h2>
+        <p class="section-lead">The DPP shows the material breakdown, origin and evidence type while avoiding absolute claims that are not supported by the file.</p>
+      </div>
+
+      <div class="grid two">
+        <div class="card reveal">
+          <h3 class="card-title">Material breakdown</h3>
+          <div class="bar-list" style="margin-top:20px;">
+            <div class="material-row"><div class="material-top"><div><div class="material-name">GOTS organic cotton</div><div class="material-origin">Origin: Türkiye / Portugal · Evidence: GOTS certificate</div></div><div class="material-percent">60%</div></div><div class="bar"><div class="bar-fill" style="width:60%"></div></div></div>
+            <div class="material-row"><div class="material-top"><div><div class="material-name">Recycled polyester</div><div class="material-origin">Origin: Portugal · Evidence: GRS certificate + supplier declaration</div></div><div class="material-percent">35%</div></div><div class="bar"><div class="bar-fill" style="width:35%"></div></div></div>
+            <div class="material-row"><div class="material-top"><div><div class="material-name">Elastane</div><div class="material-origin">Origin: Spain · Evidence: supplier declaration</div></div><div class="material-percent">5%</div></div><div class="bar"><div class="bar-fill" style="width:5%"></div></div></div>
+          </div>
+        </div>
+        <div class="card reveal">
+          <h3 class="card-title">Chemical treatments & SVHC</h3>
+          <p class="card-copy">The wording keeps the passport compliance-safe: it says what is declared and evidenced, not what cannot be proven.</p>
+          <div class="status-board" style="margin-top:20px;">
+            <div class="status-row"><strong>Dyeing</strong><span class="pill blue">Declared</span></div>
+            <div class="status-row"><strong>Softening agents</strong><span class="pill blue">Declared</span></div>
+            <div class="status-row"><strong>SVHC</strong><span class="pill green">No SVHC declared above applicable threshold</span></div>
+            <div class="status-row"><strong>Finishing chemistry</strong><span class="pill amber">Needs batch match</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="evidence" class="section">
+      <div class="section-heading center reveal">
+        <div class="kicker">Certification verification layer</div>
+        <h2>KYC-style evidence rigor, without KYC-style friction.</h2>
+        <p class="section-lead">Every claim is linked to evidence, verifier, verification date, expiry and confidence. This is the AML/KYC discipline translated into product compliance UX.</p>
+      </div>
+
+      <div class="table-wrap reveal">
+        <table>
+          <thead>
+            <tr><th>Claim</th><th>Evidence</th><th>Verified by</th><th>Date</th><th>Confidence</th><th>Expiry</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>60% organic cotton content</td><td>GOTS certificate + transaction certificate</td><td>Control Union</td><td>12 Feb 2026</td><td><span class="pill green">High</span></td><td>12 Feb 2027</td><td><span class="pill green">No action</span></td></tr>
+            <tr><td>35% recycled polyester</td><td>GRS certificate + supplier declaration</td><td>Textile Exchange partner auditor</td><td>18 Feb 2026</td><td><span class="pill amber">Medium</span></td><td>18 Feb 2027</td><td><span class="pill amber">Request batch match</span></td></tr>
+            <tr><td>OEKO-TEX chemical safety</td><td>OEKO-TEX certificate</td><td>OEKO-TEX certification body</td><td>20 Feb 2026</td><td><span class="pill green">High</span></td><td>20 Feb 2027</td><td><span class="pill green">No action</span></td></tr>
+            <tr><td>5-stage chain of custody</td><td>Supplier declarations + audit trail</td><td>Internal compliance review</td><td>25 Feb 2026</td><td><span class="pill amber">Medium</span></td><td>25 Aug 2026</td><td><span class="pill amber">Review finishing evidence</span></td></tr>
+            <tr><td>REACH declaration available</td><td>Manufacturer chemical declaration</td><td>Vela Textile compliance owner</td><td>01 Mar 2026</td><td><span class="pill amber">Medium</span></td><td>01 Mar 2027</td><td><span class="pill amber">Attach lab report if available</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="logic-grid reveal">
+        <article class="card"><span class="pill green">High confidence</span><p class="card-copy">Third-party certificate, valid date, known certifier and product or batch match.</p></article>
+        <article class="card"><span class="pill amber">Medium confidence</span><p class="card-copy">Supplier declaration plus partial third-party evidence, or evidence not fully mapped to batch UID.</p></article>
+        <article class="card"><span class="pill rose">Low confidence</span><p class="card-copy">Self-declaration only, expired document, unclear certifier or missing product/batch link.</p></article>
+      </div>
+    </section>
+
+    <section id="impact" class="section">
+      <div class="section-heading reveal">
+        <div class="kicker">Environmental impact</div>
+        <h2>Impact numbers as decision-grade indicators.</h2>
+        <p class="section-lead">Each metric is paired with source and confidence so the DPP does not become a marketing claim detached from evidence.</p>
+      </div>
+
+      <div class="grid four reveal">
+        <article class="card impact-card"><div><div class="metric-icon">CO₂</div><div class="big-number">8.5<span>kg CO₂eq</span></div><p class="card-copy">Source: LCA estimate + supplier data. Confidence: medium.</p></div><div class="progress-ring" style="--pct:68%" data-label="68%"></div></article>
+        <article class="card impact-card"><div><div class="metric-icon">H₂O</div><div class="big-number">1,200<span>L water</span></div><p class="card-copy">Source: modelled footprint + production inputs. Confidence: medium.</p></div><div class="progress-ring" style="--pct:58%" data-label="58%"></div></article>
+        <article class="card impact-card"><div><div class="metric-icon">kWh</div><div class="big-number">12<span>energy</span></div><p class="card-copy">Source: production facility data. Confidence: medium.</p></div><div class="progress-ring" style="--pct:50%" data-label="50%"></div></article>
+        <article class="card impact-card"><div><div class="metric-icon">50</div><div class="big-number">50<span>washes</span></div><p class="card-copy">Source: internal durability protocol. Confidence: medium.</p></div><div class="progress-ring" style="--pct:72%" data-label="72%"></div></article>
+      </div>
+
+      <div class="card reveal" style="margin-top:18px;border-color:rgba(167,97,9,.22);background:rgba(255,242,217,.62);">
+        <span class="pill amber">Microplastics note</span>
+        <p class="card-copy" style="color:#5f3a0a;max-width:900px;">Because the product contains 35% recycled polyester and 5% elastane, the DPP should disclose microplastic shedding risk through care guidance and future lab testing where available. The recycled-material claim should not be presented as frictionless.</p>
+      </div>
+    </section>
+
+    <section id="durability" class="section">
+      <div class="section-heading reveal">
+        <div class="kicker">Durability & end of life</div>
+        <h2>Care, repair and disposal as usable guidance.</h2>
+        <p class="section-lead">The DPP avoids generic sustainability language and gives the user specific public-facing instructions.</p>
+      </div>
+
+      <div class="split-panel">
+        <div class="card reveal">
+          <h3 class="card-title">Durability and care</h3>
+          <div class="status-board" style="margin-top:18px;">
+            <div class="status-row"><strong>Expected durability</strong><span class="pill green">50 washes</span></div>
+            <div class="status-row"><strong>Care temperature</strong><span class="pill green">30°C</span></div>
+            <div class="status-row"><strong>Tumble dry</strong><span class="pill amber">Avoid</span></div>
+            <div class="status-row"><strong>Repairability</strong><span class="pill amber">Limited seam repair guidance</span></div>
+          </div>
+        </div>
+        <div class="card reveal">
+          <h3 class="card-title">End-of-life logic</h3>
+          <div class="status-board" style="margin-top:18px;">
+            <div class="status-row"><strong>Recyclability</strong><span class="pill amber">Partial</span></div>
+            <div class="status-row"><strong>Compostability</strong><span class="pill rose">Not compostable</span></div>
+            <div class="status-row"><strong>Collection operators</strong><span class="pill amber">Country/postcode routing</span></div>
+            <div class="status-row"><strong>Disposal message</strong><span class="pill blue">Do not place in organic waste</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="compliance" class="section">
+      <div class="section-heading reveal">
+        <div class="kicker">Compliance</div>
+        <h2>Applicability before assertion.</h2>
+        <p class="section-lead">The matrix separates applicable, company-level and to-assess obligations. This keeps the UX legally careful and operationally useful.</p>
+      </div>
+      <div class="table-wrap reveal">
+        <table>
+          <thead><tr><th>Regulation / framework</th><th>Applicability</th><th>Status</th><th>Evidence</th></tr></thead>
+          <tbody>
+            <tr><td>ESPR / Digital Product Passport</td><td>Applicable</td><td><span class="pill blue">In progress</span></td><td>DPP record + QR metadata</td></tr>
+            <tr><td>REACH</td><td>Applicable</td><td><span class="pill green">Declared compliant</span></td><td>Chemical declaration</td></tr>
+            <tr><td>CSRD</td><td>Company/reporting-level assessment</td><td><span class="pill amber">Monitor</span></td><td>Sustainability reporting link</td></tr>
+            <tr><td>EUDR</td><td>To assess depending on cotton origin exposure</td><td><span class="pill gray">To assess</span></td><td>Supplier origin data</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="public" class="section">
+      <div class="card dark reveal">
+        <div class="qr-panel">
+          <div class="fake-qr" aria-label="Illustrative QR code">
+            <span class="on"></span><span class="on"></span><span class="on"></span><span></span><span class="on"></span><span class="on"></span><span class="on"></span>
+            <span class="on"></span><span></span><span class="on"></span><span></span><span class="on"></span><span></span><span class="on"></span>
+            <span class="on"></span><span class="on"></span><span class="on"></span><span></span><span class="on"></span><span class="on"></span><span class="on"></span>
+            <span></span><span></span><span></span><span class="on"></span><span></span><span></span><span></span>
+            <span class="on"></span><span></span><span class="on"></span><span class="on"></span><span></span><span class="on"></span><span class="on"></span>
+            <span></span><span class="on"></span><span></span><span></span><span class="on"></span><span></span><span class="on"></span>
+            <span class="on"></span><span></span><span class="on"></span><span></span><span class="on"></span><span class="on"></span><span></span>
+          </div>
+          <div>
+            <span class="pill green">Public layer</span>
+            <h2 style="color:white;margin-top:16px;">One passport, two levels of detail.</h2>
+            <p class="card-copy">The internal dashboard keeps evidence and actions visible. The public QR view keeps the product record understandable: composition, origin summary, footprint, care and disposal guidance.</p>
+            <ul class="public-list">
+              <li>Public URL: dpp.velatextile.example/VT-CAM-001</li>
+              <li>Issue date: 01 Jun 2026 · Last update: 10 Jun 2026</li>
+              <li>Responsible economic operator: Vela Textile S.L.</li>
+              <li>QR status: active · metadata status: complete</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-box reveal">
+        <h3>Design note for TraceWeave</h3>
+        <p>I designed the DPP as an operational scroll experience, not a regulatory archive. The main decisions were to make readiness visible first, group the nine DPP blocks into a narrative flow, and use confidence/evidence signals so the Sustainability Manager knows exactly what needs action. For the certification layer, I applied a KYC-style model: every claim has evidence, verifier, date, expiry and confidence level, but the interface only surfaces the friction when it changes a business decision.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <strong>Prototype scope:</strong> fictional brand and product data for the TraceWeave practical case. This is a UX prototype, not a legal compliance opinion or a production DPP data model.
+  </footer>
+
+  <script>
+    const progressBar = document.querySelector('.scroll-progress span');
+    const heroCard = document.querySelector('.hero-card');
+    const revealEls = Array.from(document.querySelectorAll('.reveal'));
+    const microEls = Array.from(document.querySelectorAll('.card, .timeline-step, .status-row, .material-row, .table-wrap, .logic-grid article'));
+    const barFills = Array.from(document.querySelectorAll('.bar-fill'));
+    const rings = Array.from(document.querySelectorAll('.progress-ring'));
+    const publicItems = Array.from(document.querySelectorAll('.public-list li'));
+
+    microEls.forEach((el, index) => {
+      if (!el.classList.contains('reveal')) {
+        el.classList.add('micro-reveal');
+        el.style.setProperty('--delay', `${Math.min((index % 6) * 65, 325)}ms`);
+      }
+    });
+
+    revealEls.forEach((el, index) => {
+      el.style.setProperty('--delay', `${Math.min((index % 4) * 80, 240)}ms`);
+    });
+
+    publicItems.forEach((el, index) => {
+      el.style.setProperty('--delay', `${180 + index * 90}ms`);
+    });
+
+    barFills.forEach((bar) => {
+      const target = bar.getAttribute('style')?.match(/width:\s*([^;]+)/)?.[1] || '0%';
+      bar.style.setProperty('--target-width', target.trim());
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('visible');
+        if (entry.target.classList.contains('timeline')) {
+          entry.target.style.setProperty('--line-progress', '1');
+        }
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.16, rootMargin: '0px 0px -8% 0px' });
+
+    [...revealEls, ...microEls, ...barFills, ...rings, document.querySelector('.timeline')]
+      .filter(Boolean)
+      .forEach(el => observer.observe(el));
+
+    const links = Array.from(document.querySelectorAll('.nav-links a'));
+    const sections = links.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+
+    function setActive() {
+      let current = sections[0];
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top <= 135) current = section;
+      }
+      links.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + current.id));
+    }
+
+    function updateScrollEffects() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar?.style.setProperty('--progress', `${progress}%`);
+
+      if (heroCard) {
+        const shift = Math.min(scrollTop * 0.045, 34);
+        const rotate = Math.min(scrollTop * 0.003, 1.2);
+        heroCard.style.setProperty('--hero-shift', `${shift}px`);
+        heroCard.style.setProperty('--hero-rotate', `${rotate}deg`);
+      }
+      setActive();
+    }
+
+    let ticking = false;
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateScrollEffects();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    links.forEach((link) => {
+      link.addEventListener('click', (event) => {
+        const target = document.querySelector(link.getAttribute('href'));
+        if (!target) return;
+        event.preventDefault();
+        const top = target.getBoundingClientRect().top + window.scrollY - 78;
+        window.scrollTo({ top, behavior: 'smooth' });
+      });
+    });
+
+    document.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('load', () => {
+      document.body.classList.add('loaded');
+      revealEls.slice(0, 2).forEach((el, index) => setTimeout(() => el.classList.add('visible'), 120 + index * 120));
+      updateScrollEffects();
+    });
+  </script>
+</body>
+</html>
