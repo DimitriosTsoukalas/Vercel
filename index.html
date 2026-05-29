@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vela Textile DPP Prototype</title>
+  <meta name="description" content="Digital Product Passport prototype for Vela Textile, designed for TraceWeave practical case." />
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --muted-2: #94a3b8;
+      --border: #e2e8f0;
+      --dark: #020617;
+      --green: #047857;
+      --green-bg: #ecfdf5;
+      --amber: #b45309;
+      --amber-bg: #fffbeb;
+      --rose: #be123c;
+      --rose-bg: #fff1f2;
+      --sky: #0369a1;
+      --sky-bg: #f0f9ff;
+      --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.08);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: 288px;
+      flex: 0 0 288px;
+      background: #fff;
+      border-right: 1px solid var(--border);
+      padding: 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .brand-box {
+      background: var(--dark);
+      color: white;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+    .brand-box strong { display: block; font-size: 14px; margin-bottom: 8px; }
+    .brand-box p { margin: 0; color: #cbd5e1; font-size: 12px; line-height: 1.55; }
+
+    .nav { display: grid; gap: 6px; }
+    .nav button {
+      border: 0;
+      background: transparent;
+      color: #475569;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border-radius: 14px;
+      padding: 11px 12px;
+      cursor: pointer;
+      text-align: left;
+      font-weight: 650;
+      font-size: 14px;
+    }
+    .nav button:hover { background: #f8fafc; color: var(--text); }
+    .nav button.active { background: var(--green-bg); color: #065f46; }
+    .nav-label { display: flex; align-items: center; gap: 10px; }
+
+    .main { min-width: 0; flex: 1; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+    }
+    .topbar-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .logo-title { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      width: 44px; height: 44px; border-radius: 16px;
+      background: var(--dark); color: white;
+      display: grid; place-items: center; font-size: 20px;
+    }
+    .title-main { font-weight: 800; font-size: 14px; }
+    .title-sub { color: var(--muted); font-size: 12px; margin-top: 3px; }
+
+    .content { padding: 28px; }
+    .mobile-nav { display: none; margin-bottom: 20px; }
+    .mobile-nav select {
+      width: 100%; border: 1px solid var(--border); border-radius: 14px;
+      padding: 12px; font-weight: 700; color: #334155; background: white;
+    }
+
+    .screen { display: none; animation: fade .18s ease-out; }
+    .screen.active { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .eyebrow {
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: .22em;
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+    h1 { font-size: clamp(28px, 4vw, 42px); line-height: 1.05; margin: 0; letter-spacing: -0.03em; }
+    h2 { margin: 0; font-size: 18px; letter-spacing: -0.01em; }
+    h3 { margin: 0; font-size: 16px; }
+    .description { color: var(--muted); margin: 10px 0 0; max-width: 820px; font-size: 14px; line-height: 1.7; }
+
+    .grid { display: grid; gap: 18px; }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-main { grid-template-columns: 1.1fr .9fr; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+    .card-dark { background: var(--dark); color: white; border-color: var(--dark); }
+    .card-amber { background: var(--amber-bg); border-color: #fde68a; }
+    .card-sky { background: var(--sky-bg); border-color: #bae6fd; }
+
+    .metric-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .icon-box {
+      width: 44px; height: 44px; border-radius: 16px;
+      background: var(--green-bg); color: var(--green);
+      display: grid; place-items: center; font-size: 20px;
+    }
+    .metric-value { font-size: 32px; font-weight: 900; margin-top: 18px; letter-spacing: -0.04em; }
+    .metric-label { margin-top: 3px; color: #334155; font-weight: 800; font-size: 14px; }
+    .metric-detail { color: var(--muted); font-size: 12px; line-height: 1.6; margin-top: 8px; }
+
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      border: 1px solid var(--border); border-radius: 999px;
+      padding: 5px 10px; font-size: 12px; font-weight: 850;
+      white-space: nowrap;
+    }
+    .pill.green { background: var(--green-bg); color: #047857; border-color: #bbf7d0; }
+    .pill.amber { background: var(--amber-bg); color: #b45309; border-color: #fde68a; }
+    .pill.rose { background: var(--rose-bg); color: #be123c; border-color: #fecdd3; }
+    .pill.sky { background: var(--sky-bg); color: #0369a1; border-color: #bae6fd; }
+    .pill.gray { background: #f1f5f9; color: #475569; border-color: var(--border); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 14px; }
+    thead { background: #f8fafc; color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+    th, td { padding: 13px 16px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: #f8fafc; }
+    td strong { color: #0f172a; }
+
+    .button {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 0; border-radius: 14px; padding: 11px 16px;
+      font-size: 14px; font-weight: 850; cursor: pointer;
+      background: var(--dark); color: white; text-decoration: none;
+    }
+    .button.light { background: #fff; color: var(--dark); }
+    .button:hover { filter: brightness(0.95); }
+
+    .next-action {
+      display: flex; gap: 12px; padding: 14px;
+      background: rgba(255,255,255,.08); border-radius: 16px;
+      margin-top: 12px;
+    }
+    .number {
+      width: 28px; height: 28px; flex: 0 0 28px; border-radius: 999px;
+      background: #34d399; color: #022c22; display: grid; place-items: center;
+      font-weight: 900; font-size: 12px;
+    }
+    .next-action p { margin: 0; color: #f8fafc; font-size: 14px; line-height: 1.55; }
+
+    .identity-image {
+      height: 210px; width: 210px; margin: 0 auto 18px;
+      border-radius: 32px; border: 1px solid var(--border); background: #f8fafc;
+      display: grid; place-items: center; color: #94a3b8; font-size: 92px;
+    }
+    .field-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 16px; padding: 16px; }
+    .field-label { color: #64748b; text-transform: uppercase; font-size: 11px; font-weight: 900; letter-spacing: .08em; }
+    .field-value { margin-top: 8px; font-size: 14px; font-weight: 750; word-break: break-word; }
+
+    .supply-row { display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; }
+    .stage-num { width: 48px; height: 48px; border-radius: 16px; display: grid; place-items: center; background: var(--green-bg); color: #065f46; font-weight: 900; font-size: 18px; }
+    .stage-title { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .mini-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; font-size: 13px; text-align: right; min-width: 430px; }
+    .mini-label { color: #94a3b8; text-transform: uppercase; font-size: 10px; font-weight: 900; margin-bottom: 4px; }
+    .mini-value { color: #334155; font-weight: 750; }
+
+    .bar-bg { height: 11px; border-radius: 999px; background: #f1f5f9; overflow: hidden; margin-top: 10px; }
+    .bar-fill { height: 100%; border-radius: 999px; background: #059669; }
+    .progress-fill { height: 100%; border-radius: 999px; background: var(--dark); }
+
+    .info-box { display: flex; gap: 12px; line-height: 1.65; font-size: 14px; }
+
+    .qr-card { display: grid; grid-template-columns: 230px 1fr; gap: 26px; align-items: center; }
+    .fake-qr { width: 220px; height: 220px; background: white; border-radius: 28px; padding: 20px; display: grid; grid-template-columns: repeat(5,1fr); gap: 8px; }
+    .fake-qr div { border-radius: 6px; background: #e2e8f0; }
+    .fake-qr div.dark { background: var(--dark); }
+
+    @media (max-width: 1120px) {
+      .sidebar { display: none; }
+      .mobile-nav { display: block; }
+      .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-main { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      .content { padding: 18px; }
+      .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+      .supply-row { grid-template-columns: 1fr; }
+      .mini-grid { min-width: 0; grid-template-columns: 1fr; text-align: left; }
+      .qr-card { grid-template-columns: 1fr; }
+      .fake-qr { width: 100%; max-width: 220px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand-box">
+        <strong>▣ TraceWeave Case</strong>
+        <p>B2B Digital Product Passport workspace for a non-technical Sustainability Manager.</p>
+      </div>
+      <nav class="nav" id="sidebarNav"></nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-inner">
+          <div class="logo-title">
+            <div class="logo">👕</div>
+            <div>
+              <div class="title-main">Vela Textile · Digital Product Passport</div>
+              <div class="title-sub">Unisex Organic Cotton T-Shirt · Reference VT-CAM-001</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span class="pill sky">In progress</span>
+            <span class="pill gray">Anchor-client ready prototype</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="mobile-nav">
+          <select id="mobileSelect"></select>
+        </div>
+
+        <section class="screen active" id="overview">
+          <div class="section-header">
+            <div>
+              <div class="eyebrow">Operational view</div>
+              <h1>DPP Overview</h1>
+              <p class="description">A one-screen answer to the Sustainability Manager’s first question: what is complete, what is verified, what is missing, and what needs action before this passport can be trusted.</p>
+            </div>
+            <button class="button" data-target="metadata">▣ View public QR</button>
+          </div>
+
+          <div class="grid grid-4">
+            <div class="card"><div class="metric-top"><div class="icon-box">✓</div><span class="pill sky">In progress</span></div><div class="metric-value">82%</div><div class="metric-label">Verification completeness</div><div class="metric-detail">7 of 9 DPP blocks have sufficient evidence for first client review.</div></div>
+            <div class="card"><div class="metric-top"><div class="icon-box">🛡</div><span class="pill green">Complete</span></div><div class="metric-value">0</div><div class="metric-label">Critical compliance gaps</div><div class="metric-detail">No critical gaps detected. Two blocks require evidence review.</div></div>
+            <div class="card"><div class="metric-top"><div class="icon-box">🌿</div><span class="pill green">Complete</span></div><div class="metric-value">8.5 kg</div><div class="metric-label">Carbon footprint</div><div class="metric-detail">CO₂eq estimate based on supplier and production data.</div></div>
+            <div class="card"><div class="metric-top"><div class="icon-box">📅</div><span class="pill amber">Needs review</span></div><div class="metric-value">30 Sep</div><div class="metric-label">Next review</div><div class="metric-detail">Evidence refresh due before the next certification review window.</div></div>
+          </div>
+
+          <div class="grid grid-main" style="margin-top:18px;">
+            <div class="card">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:16px;">
+                <div><h2>DPP block status</h2><p class="description" style="margin-top:4px;">Canonical ESPR-facing blocks translated into operational readiness.</p></div>
+                <span class="pill amber">Needs review</span>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Block</th><th>Status</th><th>Owner</th><th>Updated</th></tr></thead>
+                  <tbody id="blockStatusTable"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card card-dark">
+              <div style="display:flex; gap:12px; align-items:center;"><div class="icon-box" style="background:rgba(255,255,255,.1); color:white;">🔎</div><div><h2>Next best actions</h2><p style="color:#cbd5e1; margin:4px 0 0; font-size:14px;">Designed to reduce friction for a one-person Sustainability team.</p></div></div>
+              <div class="next-action"><div class="number">1</div><p>Attach batch-level evidence for recycled polyester claim.</p></div>
+              <div class="next-action"><div class="number">2</div><p>Confirm finishing-stage chemical declaration against batch UID.</p></div>
+              <div class="next-action"><div class="number">3</div><p>Complete EUDR applicability assessment for cotton origin.</p></div>
+              <button class="button light" data-target="evidence" style="margin-top:18px;">Open evidence layer →</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" id="identity">
+          <div class="section-header"><div><div class="eyebrow">Identification</div><h1>Product Identity</h1><p class="description">The passport starts with stable identifiers that link the public product record, the internal SKU, the production batch and the evidence package.</p></div></div>
+          <div class="grid grid-main">
+            <div class="card" style="text-align:center;"><div class="identity-image">👕</div><h2>Unisex Organic Cotton T-Shirt</h2><p class="description" style="margin-left:auto; margin-right:auto;">Reference VT-CAM-001</p><div style="margin-top:14px;"><span class="pill green">Complete</span> <span class="pill gray">220 SKU brand portfolio</span></div></div>
+            <div class="card"><h2 style="margin-bottom:16px;">Canonical identifiers</h2><div class="grid grid-2" id="identityFields"></div></div>
+          </div>
+        </section>
+
+        <section class="screen" id="supply">
+          <div class="section-header"><div><div class="eyebrow">Origin & production</div><h1>5-stage supply chain</h1><p class="description">A chain-of-custody view that makes diversified sourcing visible without forcing a non-technical user to read supplier documentation first.</p></div><span class="pill amber">4/5 stages verified · finishing needs review</span></div>
+          <div class="grid" id="supplyChainRows"></div>
+        </section>
+
+        <section class="screen" id="composition">
+          <div class="section-header"><div><div class="eyebrow">Composition</div><h1>Materials, origin and chemical disclosures</h1><p class="description">The screen separates what the product is made of from what has been evidenced, avoiding overclaiming and making certification gaps visible.</p></div></div>
+          <div class="grid grid-main">
+            <div class="card"><h2 style="margin-bottom:16px;">Material breakdown</h2><div class="grid" id="materialsRows"></div></div>
+            <div class="card"><h2>Chemical treatments & SVHC</h2><div class="grid" style="margin-top:16px;" id="chemicalRows"></div><div class="card card-sky" style="margin-top:16px; box-shadow:none;"><div class="info-box"><strong>ℹ</strong><span>Compliance wording avoids absolute claims. The interface shows what is declared, evidenced and still pending.</span></div></div></div>
+          </div>
+        </section>
+
+        <section class="screen" id="evidence">
+          <div class="section-header"><div><div class="eyebrow">KYC-style verification layer</div><h1>Certifications & Evidence</h1><p class="description">Each sustainability claim is tied to evidence, certifier, verification date, confidence level and expiry. This applies onboarding-grade evidentiary rigor without turning the UX into an audit archive.</p></div><span class="pill green">3 High · 2 Medium · 0 Low</span></div>
+          <div class="card"><div class="table-wrap"><table style="min-width:1000px;"><thead><tr><th>Claim</th><th>Evidence</th><th>Verified by</th><th>Date</th><th>Confidence</th><th>Expiry</th><th>Action</th></tr></thead><tbody id="evidenceTable"></tbody></table></div></div>
+          <div class="grid grid-3" style="margin-top:18px;"><div class="card"><h3 style="color:#047857;">High confidence</h3><p class="description">Third-party certificate, valid date, product or batch match, and known certifying body.</p></div><div class="card"><h3 style="color:#b45309;">Medium confidence</h3><p class="description">Supplier declaration plus partial third-party evidence, or valid evidence not fully mapped to batch UID.</p></div><div class="card"><h3 style="color:#be123c;">Low confidence</h3><p class="description">Self-declaration only, expired document, unclear certifier, or missing product/batch link.</p></div></div>
+        </section>
+
+        <section class="screen" id="impact">
+          <div class="section-header"><div><div class="eyebrow">Environmental impact</div><h1>Footprint and durability indicators</h1><p class="description">Impact metrics are shown as decision-grade indicators with source and confidence, not as isolated marketing numbers.</p></div></div>
+          <div class="grid grid-4" id="impactRows"></div>
+          <div class="card card-amber" style="margin-top:18px;"><div class="info-box"><strong>⚠</strong><span><strong>Microplastics disclosure note:</strong> The product contains 35% recycled polyester and 5% elastane. The DPP should disclose microplastic shedding risk through care guidance and future lab testing where available, instead of presenting the recycled material claim as frictionless.</span></div></div>
+        </section>
+
+        <section class="screen" id="durability">
+          <div class="section-header"><div><div class="eyebrow">Durability & repairability</div><h1>Care, useful life and repair guidance</h1><p class="description">The DPP turns durability into practical guidance the Sustainability Manager can publish and maintain.</p></div></div>
+          <div class="grid grid-3"><div class="card"><div class="metric-top"><div class="icon-box">✓</div><span class="pill green">Complete</span></div><div class="metric-value">50 washes</div><div class="metric-label">Expected durability</div><div class="metric-detail">Based on internal durability protocol for shape retention and textile quality.</div></div><div class="card"><div class="metric-top"><div class="icon-box">✦</div><span class="pill green">Complete</span></div><div class="metric-value">30°C</div><div class="metric-label">Care guidance</div><div class="metric-detail">Low-temperature wash, avoid tumble dryer, wash inside out to reduce wear.</div></div><div class="card"><div class="metric-top"><div class="icon-box">⏱</div><span class="pill amber">Partial</span></div><div class="metric-value">Limited</div><div class="metric-label">Repairability</div><div class="metric-detail">No spare parts required; basic seam repair guidance available.</div></div></div>
+          <div class="card" style="margin-top:18px;"><h2 style="margin-bottom:16px;">Care instructions for public DPP</h2><div class="grid grid-2" id="careRows"></div></div>
+        </section>
+
+        <section class="screen" id="endoflife">
+          <div class="section-header"><div><div class="eyebrow">Circularity</div><h1>End-of-life guidance</h1><p class="description">The interface separates recyclable, compostable and disposal claims so the brand does not overstate circularity.</p></div></div>
+          <div class="grid grid-3"><div class="card"><div class="icon-box">♻</div><h2 style="margin-top:16px;">Recyclability</h2><p class="description">Partially recyclable. Blended fibers require specialized textile recycling operators.</p><p><span class="pill amber">Partial</span></p></div><div class="card"><div class="icon-box">🌿</div><h2 style="margin-top:16px;">Compostability</h2><p class="description">Not compostable due to recycled polyester and elastane content.</p><p><span class="pill gray">To assess</span></p></div><div class="card"><div class="icon-box">📍</div><h2 style="margin-top:16px;">Collection operators</h2><p class="description">Public DPP can route users to nearby textile collection points based on country or postcode.</p><p><span class="pill amber">Needs review</span></p></div></div>
+          <div class="card" style="margin-top:18px;"><h2>Suggested public disposal message</h2><p class="description">Do not place in organic waste. Use textile collection points where available. Because this product contains blended fibers, recycling route availability depends on local operators.</p></div>
+        </section>
+
+        <section class="screen" id="compliance">
+          <div class="section-header"><div><div class="eyebrow">Regulatory readiness</div><h1>Compliance applicability matrix</h1><p class="description">The DPP distinguishes between applicable, company-level and to-assess obligations. This avoids presenting uncertain legal applicability as a hard claim.</p></div></div>
+          <div class="card"><div class="table-wrap"><table style="min-width:900px;"><thead><tr><th>Regulation / framework</th><th>Applicability</th><th>Status</th><th>Evidence</th></tr></thead><tbody id="complianceTable"></tbody></table></div></div>
+        </section>
+
+        <section class="screen" id="metadata">
+          <div class="section-header"><div><div class="eyebrow">Metadata / public layer</div><h1>Public QR and maintenance metadata</h1><p class="description">The same passport can support an internal operational dashboard and a simpler public view for QR access.</p></div></div>
+          <div class="grid grid-main">
+            <div class="card"><h2>Passport metadata</h2><div class="grid" style="margin-top:16px;" id="metadataRows"></div></div>
+            <div class="card card-dark"><div class="qr-card"><div class="fake-qr" id="fakeQr"></div><div><div class="eyebrow" style="color:#6ee7b7;">Public DPP preview</div><h1 style="font-size:28px;">Unisex Organic Cotton T-Shirt</h1><p style="color:#cbd5e1; line-height:1.7; font-size:14px;">A public-facing passport would show composition, origin summary, care instructions, footprint and recycling guidance without exposing internal audit workflow details.</p><p style="line-height:1.8; font-size:14px;">✓ 60% GOTS organic cotton<br>✓ 8.5 kg CO₂eq footprint disclosed<br>⚠ Blended fiber recycling route depends on local operator</p><button class="button light">Open public record ↗</button></div></div></div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const navItems = [
+      ['overview','DPP Overview','▣'], ['identity','Product Identity','👕'], ['supply','Supply Chain','🏭'],
+      ['composition','Composition','🌿'], ['evidence','Certifications & Evidence','📄'], ['impact','Environmental Impact','💧'],
+      ['durability','Durability & Care','✦'], ['endoflife','End of Life','♻'], ['compliance','Compliance','🛡'], ['metadata','Metadata / Public QR','▦']
+    ];
+
+    const statusClass = (status) => {
+      if (['Complete','Verified','No action','Declared compliant'].includes(status)) return 'green';
+      if (['Partial','Needs review','Monitor'].includes(status)) return 'amber';
+      if (['Needs evidence'].includes(status)) return 'rose';
+      if (['In progress'].includes(status)) return 'sky';
+      return 'gray';
+    };
+    const pill = (status) => `<span class="pill ${statusClass(status)}">${status}</span>`;
+    const conf = (level) => `<span class="pill ${level === 'High' ? 'green' : level === 'Medium' ? 'amber' : 'rose'}">${level}</span>`;
+
+    const blockStatus = [
+      ['Identification','Complete','Product Ops','10 Jun 2026'], ['Origin & Production','Complete','Sourcing','09 Jun 2026'],
+      ['Composition','Complete','Sustainability','08 Jun 2026'], ['Traceability','Needs review','Compliance','07 Jun 2026'],
+      ['Durability & Repairability','Complete','Product','06 Jun 2026'], ['Environmental Impact','Complete','Sustainability','05 Jun 2026'],
+      ['End of Life','Partial','Circularity','04 Jun 2026'], ['Compliance','Needs evidence','Legal','03 Jun 2026'], ['Metadata','Complete','DPP Admin','10 Jun 2026']
+    ];
+
+    const identityFields = [
+      ['Product UID','DPP-VT-CAM-001-2026'], ['Batch UID','BATCH-VT-0426-A'], ['SKU','VT-CAM-001'], ['GTIN','8430000000012'],
+      ['Product category','Textile apparel / T-shirt'], ['Distribution','B2C + B2B'], ['Reference product','Unisex organic cotton t-shirt'], ['DPP owner','Sustainability Manager']
+    ];
+
+    const supplyChain = [
+      ['Ginning','Türkiye','Anatolia Cotton Processing Ltd.','14 Feb 2026','Supplier declaration + organic cotton lot reference','Medium','Verified'],
+      ['Spinning','Portugal','Porto Sustainable Yarns SA','21 Feb 2026','GOTS transaction certificate','High','Verified'],
+      ['Weaving','Morocco','Atlas Weave Factory','03 Mar 2026','Production order + supplier declaration','Medium','Verified'],
+      ['Confection','Tunisia','Sahel Garment Works','12 Mar 2026','Factory audit + batch production record','High','Verified'],
+      ['Finishing','Spain','Valencia Textile Finishers SL','19 Mar 2026','Chemical declaration pending final QA match','Medium','Needs review']
+    ];
+
+    const materials = [
+      ['GOTS organic cotton',60,'Türkiye / Portugal','GOTS certificate'], ['Recycled polyester',35,'Portugal','GRS certificate'], ['Elastane',5,'Spain','Supplier declaration']
+    ];
+
+    const evidenceRows = [
+      ['60% organic cotton content','GOTS certificate + transaction certificate','Control Union','12 Feb 2026','High','12 Feb 2027','No action'],
+      ['35% recycled polyester','GRS certificate + supplier declaration','Textile Exchange partner auditor','18 Feb 2026','Medium','18 Feb 2027','Request batch-level match'],
+      ['Chemical safety / OEKO-TEX alignment','OEKO-TEX certificate','OEKO-TEX certification body','20 Feb 2026','High','20 Feb 2027','No action'],
+      ['5-stage chain of custody','Supplier declarations + audit trail','Internal compliance review','25 Feb 2026','Medium','25 Aug 2026','Review finishing evidence'],
+      ['REACH declaration available','Manufacturer chemical declaration','Vela Textile compliance owner','01 Mar 2026','Medium','01 Mar 2027','Attach lab report if available']
+    ];
+
+    const impactRows = [
+      ['Carbon footprint','8.5','kg CO₂eq','LCA estimate + supplier data','Medium','🌿',68],
+      ['Water footprint','1,200','L H₂O','Modelled footprint + production inputs','Medium','💧',58],
+      ['Energy use','12','kWh','Production facility data','Medium','⚡',50],
+      ['Expected durability','50','washes','Internal durability protocol','Medium','👕',72]
+    ];
+
+    const complianceRows = [
+      ['ESPR / Digital Product Passport','Applicable','In progress','DPP record + QR metadata'],
+      ['REACH','Applicable','Declared compliant','Chemical declaration'],
+      ['CSRD','Company/reporting-level assessment','Monitor','Sustainability reporting link'],
+      ['EUDR','To assess depending on cotton origin exposure','To assess','Supplier origin data']
+    ];
+
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
+      document.querySelectorAll('.nav button').forEach(b => b.classList.toggle('active', b.dataset.target === id));
+      const select = document.getElementById('mobileSelect');
+      if (select) select.value = id;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function initNav() {
+      const nav = document.getElementById('sidebarNav');
+      const select = document.getElementById('mobileSelect');
+      nav.innerHTML = navItems.map(([id,label,icon], idx) => `<button class="${idx===0?'active':''}" data-target="${id}"><span class="nav-label"><span>${icon}</span>${label}</span><span>›</span></button>`).join('');
+      select.innerHTML = navItems.map(([id,label]) => `<option value="${id}">${label}</option>`).join('');
+      document.querySelectorAll('[data-target]').forEach(el => el.addEventListener('click', () => showScreen(el.dataset.target)));
+      select.addEventListener('change', e => showScreen(e.target.value));
+    }
+
+    function render() {
+      document.getElementById('blockStatusTable').innerHTML = blockStatus.map(r => `<tr><td><strong>${r[0]}</strong></td><td>${pill(r[1])}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');
+      document.getElementById('identityFields').innerHTML = identityFields.map(r => `<div class="field-card"><div class="field-label">${r[0]}</div><div class="field-value">${r[1]}</div></div>`).join('');
+      document.getElementById('supplyChainRows').innerHTML = supplyChain.map((r,i) => `<div class="card"><div class="supply-row"><div class="stage-num">${i+1}</div><div><div class="stage-title"><h2>${r[0]}</h2>${pill(r[6])}${conf(r[5])}</div><p class="description" style="margin-top:6px;">${r[2]}</p></div><div class="mini-grid"><div><div class="mini-label">Country</div><div class="mini-value">${r[1]}</div></div><div><div class="mini-label">Date</div><div class="mini-value">${r[3]}</div></div><div><div class="mini-label">Evidence</div><div class="mini-value">${r[4]}</div></div></div></div></div>`).join('');
+      document.getElementById('materialsRows').innerHTML = materials.map(r => `<div class="card" style="box-shadow:none;"><div style="display:flex; justify-content:space-between; gap:12px;"><div><strong>${r[0]}</strong><p class="description" style="margin-top:4px;">Origin: ${r[2]} · Evidence: ${r[3]}</p></div><div class="metric-value" style="font-size:26px; margin:0;">${r[1]}%</div></div><div class="bar-bg"><div class="bar-fill" style="width:${r[1]}%"></div></div></div>`).join('');
+      document.getElementById('chemicalRows').innerHTML = [['Dyeing','Declared'],['Softening agents','Declared'],['SVHC','No SVHC declared above applicable threshold'],['Finishing chemistry','Needs batch-level evidence match']].map(r => `<div class="field-card"><div class="field-label">${r[0]}</div><div class="field-value">${r[1]}</div></div>`).join('');
+      document.getElementById('evidenceTable').innerHTML = evidenceRows.map(r => `<tr><td><strong>${r[0]}</strong></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${conf(r[4])}</td><td>${r[5]}</td><td>${pill(r[6] === 'No action' ? 'No action' : 'Needs review')}</td></tr>`).join('');
+      document.getElementById('impactRows').innerHTML = impactRows.map(r => `<div class="card"><div class="metric-top"><div class="icon-box">${r[5]}</div>${conf(r[4])}</div><div class="metric-value">${r[1]} <span style="font-size:14px; color:#64748b;">${r[2]}</span></div><div class="metric-label">${r[0]}</div><div class="bar-bg"><div class="progress-fill" style="width:${r[6]}%"></div></div><div class="metric-detail">Source: ${r[3]}</div></div>`).join('');
+      document.getElementById('careRows').innerHTML = ['Wash at 30°C','Avoid tumble drying','Wash with similar colours','Repair small seam defects before disposal'].map(x => `<div class="field-card"><strong style="color:#047857;">✓</strong> <span style="font-weight:750;">${x}</span></div>`).join('');
+      document.getElementById('complianceTable').innerHTML = complianceRows.map(r => `<tr><td><strong>${r[0]}</strong></td><td>${r[1]}</td><td>${pill(r[2])}</td><td>${r[3]}</td></tr>`).join('');
+      document.getElementById('metadataRows').innerHTML = [['Issue date','01 Jun 2026'],['Last update','10 Jun 2026'],['Responsible economic operator','Vela Textile S.L.'],['URL','dpp.velatextile.example/VT-CAM-001'],['QR status','Active']].map(r => `<div class="field-card"><div class="field-label">${r[0]}</div><div class="field-value">${r[1]}</div></div>`).join('');
+      document.getElementById('fakeQr').innerHTML = Array.from({length:25}).map((_,i) => `<div class="${[0,1,3,4,5,9,10,12,14,15,19,20,21,23,24].includes(i)?'dark':''}"></div>`).join('');
+    }
+
+    initNav();
+    render();
+  </script>
+</body>
+</html>
