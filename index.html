@@ -1,0 +1,2586 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vela Textile · Digital Product Passport</title>
+  <meta name="description" content="One-page Digital Product Passport prototype for Vela Textile, reference VT-CAM-001." />
+  <style>
+    :root {
+      --green-950: #09251f;
+      --green-900: #0c332b;
+      --green-800: #12473c;
+      --green-700: #17604e;
+      --gold-500: #c79a32;
+      --gold-400: #d8b15a;
+      --gold-100: #fbf4df;
+      --grey-950: #1f2428;
+      --grey-800: #3a4147;
+      --grey-600: #687178;
+      --grey-300: #d8dde0;
+      --grey-150: #edf0ef;
+      --grey-100: #f6f7f5;
+      --white: #ffffff;
+      --shadow: 0 24px 60px rgba(9, 37, 31, 0.12);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --max: 1160px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: #09251f;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--grey-950);
+      background: #09251f;
+      min-height: 100vh;
+    }
+
+    .supply-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(135deg, rgba(9, 37, 31, 1) 0%, rgba(18, 71, 60, 0.96) 30%, rgba(199, 154, 50, 0.72) 66%, rgba(237, 240, 239, 0.94) 100%);
+    }
+
+    .supply-bg::before,
+    .supply-bg::after {
+      content: none;
+      display: none;
+    }
+
+    .supply-network {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.62;
+      filter: drop-shadow(0 18px 42px rgba(9, 37, 31, 0.12));
+      transform: scale(1.02);
+    }
+
+    .network-route {
+      fill: none;
+      stroke: url(#routeGradient);
+      stroke-width: 3.6;
+      stroke-linecap: round;
+      stroke-dasharray: 18 18;
+      animation: routeFlow 16s linear infinite;
+    }
+
+    .network-route.alt {
+      stroke-width: 2;
+      opacity: 0.48;
+      stroke-dasharray: 10 16;
+      animation-duration: 22s;
+      animation-direction: reverse;
+    }
+
+    .network-node {
+      fill: #0b2f27;
+      stroke: rgba(216, 177, 90, 0.92);
+      stroke-width: 4;
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: nodePulse 4.8s ease-in-out infinite, nodeFloat 9s ease-in-out infinite;
+    }
+
+    .network-node.gold {
+      fill: #c79a32;
+      stroke: rgba(9, 37, 31, 0.72);
+    }
+
+    .network-label {
+      font: 800 22px Inter, ui-sans-serif, system-ui;
+      fill: rgba(9, 37, 31, 0.34);
+      letter-spacing: 0.04em;
+    }
+
+    .bg-orb {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(6px);
+      opacity: 0.42;
+      animation: drift 12s ease-in-out infinite;
+    }
+
+    .orb-one {
+      width: 220px;
+      height: 220px;
+      left: 6%;
+      top: 14%;
+      background: rgba(199, 154, 50, 0.30);
+    }
+
+    .orb-two {
+      width: 300px;
+      height: 300px;
+      right: 7%;
+      top: 42%;
+      background: rgba(18, 71, 60, 0.22);
+      animation-delay: -3s;
+    }
+
+    .orb-three {
+      width: 240px;
+      height: 240px;
+      left: 28%;
+      bottom: 4%;
+      background: rgba(216, 177, 90, 0.20);
+      animation-delay: -6s;
+    }
+
+    @keyframes routeFlow {
+      to { stroke-dashoffset: -360; }
+    }
+
+    @keyframes nodePulse {
+      0%, 100% { opacity: 0.88; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes nodeFloat {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(7px, -10px, 0) scale(1.12); }
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      50% { transform: translate3d(22px, -18px, 0); }
+    }
+
+    .floating-objects {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      perspective: 900px;
+    }
+
+    .float-object {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 96px;
+      padding: 10px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(216, 177, 90, 0.34);
+      background: rgba(255, 255, 255, 0.26);
+      color: rgba(9, 37, 31, 0.82);
+      box-shadow: 0 18px 40px rgba(9, 37, 31, 0.10);
+      backdrop-filter: blur(14px) saturate(1.15);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      animation: spaceFloat var(--float-speed, 14s) ease-in-out infinite;
+      animation-delay: var(--float-delay, 0s);
+      opacity: 0.78;
+    }
+
+    .float-object::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--gold-500);
+      box-shadow: 0 0 20px rgba(199, 154, 50, 0.62);
+      flex: 0 0 auto;
+    }
+
+    .float-object.green {
+      border-color: rgba(23, 96, 78, 0.30);
+      background: rgba(9, 37, 31, 0.14);
+      color: rgba(9, 37, 31, 0.92);
+    }
+
+    .float-object.green::before {
+      background: var(--green-800);
+      box-shadow: 0 0 20px rgba(23, 96, 78, 0.46);
+    }
+
+    .float-object.one { left: 7%; top: 22%; --float-speed: 15s; }
+    .float-object.two { right: 11%; top: 20%; --float-speed: 16s; --float-delay: -4s; }
+    .float-object.three { left: 16%; bottom: 24%; --float-speed: 18s; --float-delay: -7s; }
+    .float-object.four { right: 18%; bottom: 16%; --float-speed: 14s; --float-delay: -2s; }
+    .float-object.five { left: 46%; top: 12%; --float-speed: 20s; --float-delay: -10s; }
+    .float-object.six { right: 38%; bottom: 8%; --float-speed: 17s; --float-delay: -5s; }
+
+    @keyframes spaceFloat {
+      0%, 100% { transform: translate3d(0, 0, 0) rotate(-2deg) scale(1); }
+      25% { transform: translate3d(18px, -22px, 26px) rotate(3deg) scale(1.03); }
+      50% { transform: translate3d(-10px, -42px, 0) rotate(-4deg) scale(0.98); }
+      75% { transform: translate3d(-24px, -12px, 34px) rotate(2deg) scale(1.04); }
+    }
+
+    .progress, .topbar, main {
+      position: relative;
+    }
+
+    main {
+      z-index: 1;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .progress {
+      position: fixed;
+      inset: 0 auto auto 0;
+      height: 4px;
+      width: 0%;
+      z-index: 100;
+      background: linear-gradient(90deg, var(--green-800), var(--gold-500));
+      box-shadow: 0 0 16px rgba(199, 154, 50, 0.45);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid rgba(199, 154, 50, 0.22);
+      background: rgba(238, 243, 237, 0.72);
+      backdrop-filter: blur(22px) saturate(1.25);
+    }
+
+    .topbar-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 220px;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: var(--gold-400);
+      background: var(--green-950);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      box-shadow: 0 10px 28px rgba(9, 37, 31, 0.18);
+    }
+
+    .brand-title {
+      font-size: 14px;
+      line-height: 1.1;
+      font-weight: 850;
+      color: var(--green-950);
+    }
+
+    .brand-subtitle {
+      margin-top: 3px;
+      font-size: 12px;
+      color: var(--grey-600);
+      font-weight: 600;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+
+    .nav::-webkit-scrollbar { display: none; }
+
+    .nav a {
+      white-space: nowrap;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 9px 12px;
+      color: var(--grey-600);
+      font-size: 12px;
+      font-weight: 800;
+      transition: 180ms ease;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      color: var(--green-950);
+      background: var(--gold-100);
+      border-color: rgba(199, 154, 50, 0.3);
+    }
+
+    main { overflow: hidden; }
+
+    .hero {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 72px 24px 46px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 42px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--green-800);
+      background: rgba(199, 154, 50, 0.14);
+      border: 1px solid rgba(199, 154, 50, 0.24);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    h1 {
+      margin: 18px 0 0;
+      color: var(--green-950);
+      font-size: clamp(44px, 7vw, 86px);
+      line-height: 0.92;
+      letter-spacing: -0.075em;
+    }
+
+    .hero p {
+      max-width: 640px;
+      margin: 24px 0 0;
+      color: var(--grey-600);
+      font-size: 18px;
+      line-height: 1.75;
+      font-weight: 520;
+    }
+
+    .hero-gold-text {
+      color: var(--gold-500) !important;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 46px;
+      border-radius: 999px;
+      padding: 0 18px;
+      font-size: 14px;
+      font-weight: 900;
+      border: 1px solid transparent;
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    .button.primary {
+      color: white;
+      background: var(--green-950);
+      box-shadow: 0 16px 40px rgba(9, 37, 31, 0.2);
+    }
+
+    .button.secondary {
+      color: var(--green-950);
+      background: white;
+      border-color: var(--grey-300);
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 44px rgba(9, 37, 31, 0.16);
+    }
+
+    .passport-card {
+      position: relative;
+      border-radius: 36px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.84), rgba(251, 244, 223, 0.68)),
+        radial-gradient(circle at 20% 20%, rgba(216, 177, 90, 0.38), transparent 20rem);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      box-shadow: 0 28px 80px rgba(9, 37, 31, 0.16);
+      backdrop-filter: blur(18px) saturate(1.12);
+      padding: 28px;
+      animation: floatCard 6s ease-in-out infinite;
+    }
+
+    @keyframes floatCard {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .passport-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 11px;
+      font-weight: 900;
+      color: var(--green-950);
+      background: rgba(199, 154, 50, 0.18);
+      border: 1px solid rgba(199, 154, 50, 0.25);
+    }
+
+    .qr {
+      width: 94px;
+      height: 94px;
+      border-radius: 20px;
+      padding: 9px;
+      background: white;
+      border: 1px solid rgba(58, 65, 71, 0.12);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      gap: 4px;
+    }
+
+    .qr span { border-radius: 3px; background: var(--green-950); }
+    .qr span.light { background: var(--grey-150); }
+
+    .shirt-visual {
+      height: 220px;
+      border-radius: 30px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(199, 154, 50, 0.18), transparent 13rem),
+        linear-gradient(180deg, white, #f3f1e8);
+      border: 1px solid rgba(216, 221, 224, 0.9);
+      color: var(--green-900);
+      overflow: hidden;
+    }
+
+    .product-diagram {
+      width: min(76%, 250px);
+      height: 170px;
+      overflow: visible;
+    }
+
+    .product-diagram .garment-fill {
+      fill: rgba(255, 255, 255, 0.72);
+      stroke: var(--green-950);
+      stroke-width: 3.2;
+      stroke-linejoin: round;
+    }
+
+    .product-diagram .garment-seam {
+      fill: none;
+      stroke: rgba(199, 154, 50, 0.92);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-dasharray: 5 7;
+    }
+
+    .product-diagram .measurement-line {
+      stroke: rgba(58, 65, 71, 0.55);
+      stroke-width: 1.5;
+      stroke-linecap: round;
+    }
+
+    .product-diagram .node {
+      fill: var(--gold-500);
+      stroke: var(--green-950);
+      stroke-width: 1.5;
+    }
+
+    .product-diagram text {
+      fill: var(--grey-800);
+      font: 800 9px Inter, ui-sans-serif, system-ui;
+      letter-spacing: 0.08em;
+    }
+
+    .passport-meta {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .meta-item {
+      border-radius: 18px;
+      padding: 13px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(216, 221, 224, 0.7);
+    }
+
+    .meta-label {
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--grey-600);
+    }
+
+    .meta-value {
+      margin-top: 5px;
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--green-950);
+      overflow-wrap: anywhere;
+    }
+
+    .section {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 38px 24px;
+      scroll-margin-top: 86px;
+    }
+
+    .section-shell {
+      position: relative;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(255, 255, 255, 0.68);
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(251, 244, 223, 0.46)),
+        rgba(255, 255, 255, 0.58);
+      box-shadow: 0 24px 70px rgba(9, 37, 31, 0.10);
+      backdrop-filter: blur(18px) saturate(1.18);
+      padding: clamp(22px, 4vw, 36px);
+      overflow: hidden;
+    }
+
+    .section-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 7px;
+      background: linear-gradient(180deg, var(--green-800), var(--gold-500));
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 74px 1fr;
+      gap: 20px;
+      align-items: start;
+      margin-bottom: 24px;
+    }
+
+    .number {
+      width: 58px;
+      height: 58px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      color: var(--gold-400);
+      background: var(--green-950);
+      font-size: 18px;
+      font-weight: 950;
+      box-shadow: 0 14px 34px rgba(9, 37, 31, 0.16);
+    }
+
+    .section h2 {
+      margin: 0;
+      color: var(--green-950);
+      font-size: clamp(26px, 3.2vw, 40px);
+      letter-spacing: -0.045em;
+      line-height: 1;
+    }
+
+    .section-desc {
+      margin: 11px 0 0;
+      max-width: 820px;
+      color: var(--grey-600);
+      font-size: 15px;
+      line-height: 1.7;
+      font-weight: 520;
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .field-card, .data-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 255, 255, 0.70);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.78), rgba(251,244,223,0.42));
+      backdrop-filter: blur(10px);
+      padding: 18px;
+      min-height: 96px;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .field-card:hover, .data-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 42px rgba(9, 37, 31, 0.09);
+      border-color: rgba(199, 154, 50, 0.45);
+    }
+
+    .label {
+      font-size: 11px;
+      font-weight: 950;
+      color: var(--gold-500);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .value {
+      margin-top: 8px;
+      color: var(--green-950);
+      font-size: 16px;
+      line-height: 1.35;
+      font-weight: 850;
+      overflow-wrap: anywhere;
+    }
+
+    .note {
+      margin-top: 6px;
+      color: var(--grey-600);
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 520;
+    }
+
+    .chain {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stage {
+      position: relative;
+      border-radius: 22px;
+      padding: 18px;
+      background: var(--green-950);
+      color: white;
+      min-height: 198px;
+      overflow: hidden;
+    }
+
+    .stage::after {
+      content: "";
+      position: absolute;
+      right: -36px;
+      bottom: -44px;
+      width: 120px;
+      height: 120px;
+      border-radius: 999px;
+      background: rgba(199, 154, 50, 0.18);
+    }
+
+    .stage-num {
+      width: 34px;
+      height: 34px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      background: var(--gold-500);
+      color: var(--green-950);
+      font-size: 13px;
+      font-weight: 950;
+      margin-bottom: 14px;
+    }
+
+    .stage h3 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.1;
+    }
+
+    .stage p {
+      margin: 9px 0 0;
+      color: rgba(255, 255, 255, 0.74);
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 600;
+    }
+
+    .material-row {
+      display: grid;
+      grid-template-columns: 170px 1fr 165px;
+      gap: 16px;
+      align-items: center;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--grey-300);
+      background: white;
+      padding: 16px;
+    }
+
+    .bar {
+      height: 13px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: var(--grey-150);
+    }
+
+    .bar-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--green-800), var(--gold-500));
+      transition: width 1000ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    .is-visible .bar-fill { width: var(--w); }
+
+    .status {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 11px;
+      font-weight: 950;
+      color: var(--green-950);
+      background: var(--gold-100);
+      border: 1px solid rgba(199, 154, 50, 0.28);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--grey-300);
+      border-radius: var(--radius-lg);
+      background: white;
+    }
+
+    table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th {
+      text-align: left;
+      color: var(--green-950);
+      background: var(--gold-100);
+      padding: 14px 16px;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 950;
+    }
+
+    td {
+      padding: 15px 16px;
+      border-top: 1px solid var(--grey-150);
+      color: var(--grey-800);
+      font-weight: 560;
+      vertical-align: top;
+    }
+
+    td strong {
+      color: var(--green-950);
+      font-weight: 900;
+    }
+
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .impact {
+      text-align: center;
+      border-radius: 24px;
+      border: 1px solid var(--grey-300);
+      background: white;
+      padding: 18px 12px;
+    }
+
+    .impact-value {
+      color: var(--green-950);
+      font-size: 25px;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      font-weight: 950;
+    }
+
+    .impact-unit {
+      margin-top: 5px;
+      color: var(--gold-500);
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .impact-label {
+      margin-top: 10px;
+      color: var(--grey-600);
+      font-size: 12px;
+      font-weight: 750;
+      line-height: 1.4;
+    }
+
+    .qr-large {
+      width: 220px;
+      height: 220px;
+      border-radius: 34px;
+      padding: 18px;
+      background: white;
+      border: 1px solid var(--grey-300);
+      box-shadow: 0 18px 50px rgba(9, 37, 31, 0.09);
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      grid-template-rows: repeat(7, 1fr);
+      gap: 5px;
+    }
+
+    .qr-large span {
+      border-radius: 4px;
+      background: var(--green-950);
+    }
+
+    .qr-large span.light { background: var(--grey-150); }
+    .metadata-grid { grid-template-columns: 260px 1fr; align-items: center; }
+
+    .footer {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 40px 24px 70px;
+      color: var(--grey-600);
+      font-size: 13px;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 620ms ease, transform 620ms ease;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .stagger > * {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 560ms ease, transform 560ms ease;
+      transition-delay: calc(var(--i, 0) * 80ms);
+    }
+
+    .is-visible .stagger > * {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+
+
+    .verification-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      align-items: start;
+      margin-top: 18px;
+    }
+
+    .verification-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(216, 221, 224, 0.95);
+      background:
+        radial-gradient(circle at 100% 0%, rgba(199, 154, 50, 0.14), transparent 17rem),
+        linear-gradient(180deg, rgba(255,255,255,0.96), rgba(251,251,248,0.92));
+      padding: 18px;
+      box-shadow: 0 14px 34px rgba(9, 37, 31, 0.05);
+    }
+
+    .verification-subsection {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(216, 221, 224, 0.88);
+    }
+
+    .verification-title {
+      margin: 0 0 8px;
+      color: var(--green-950);
+      font-size: 18px;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .verification-copy {
+      margin: 0;
+      color: var(--grey-600);
+      font-size: 13px;
+      line-height: 1.65;
+      font-weight: 540;
+    }
+
+    .verification-mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .mini-metric {
+      border-radius: 16px;
+      background: var(--gold-100);
+      border: 1px solid rgba(199, 154, 50, 0.28);
+      padding: 12px;
+    }
+
+    .mini-metric .metric-value {
+      color: var(--green-950);
+      font-size: 22px;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -0.04em;
+    }
+
+    .mini-metric .metric-label {
+      margin-top: 6px;
+      color: var(--grey-600);
+      font-size: 11px;
+      font-weight: 850;
+      line-height: 1.35;
+    }
+
+    .confidence-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-size: 11px;
+      font-weight: 950;
+      background: var(--gold-100);
+      color: var(--green-950);
+      border: 1px solid rgba(199, 154, 50, 0.3);
+    }
+
+    .confidence-chip.high {
+      color: #ffffff;
+      background: var(--green-800);
+      border-color: var(--green-800);
+    }
+
+    .confidence-chip.medium {
+      color: var(--green-950);
+      background: var(--gold-100);
+      border-color: rgba(199, 154, 50, 0.4);
+    }
+
+    .confidence-chip.pending {
+      color: var(--grey-800);
+      background: var(--grey-150);
+      border-color: var(--grey-300);
+    }
+
+    .doc-checklist {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(280px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 22px;
+      border: 1px solid rgba(199, 154, 50, 0.28);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(216, 177, 90, 0.20), transparent 16rem),
+        linear-gradient(135deg, rgba(9, 37, 31, 0.06), rgba(255, 255, 255, 0.72));
+    }
+
+    .doc-check {
+      display: grid;
+      grid-template-columns: 24px 1fr auto;
+      grid-template-areas: "check copy tag";
+      gap: 10px;
+      align-items: start;
+      border-radius: 18px;
+      border: 1px solid rgba(216, 221, 224, 0.94);
+      background: rgba(255, 255, 255, 0.84);
+      padding: 13px 13px 12px;
+      box-shadow: 0 12px 26px rgba(9, 37, 31, 0.055);
+      min-height: 92px;
+    }
+
+    .doc-check input {
+      grid-area: check;
+      accent-color: var(--green-800);
+      width: 17px;
+      height: 17px;
+      margin-top: 1px;
+    }
+
+    .doc-check strong {
+      display: block;
+      color: var(--green-950);
+      font-size: 13px;
+      line-height: 1.3;
+    }
+
+    .doc-check span {
+      display: block;
+      color: var(--grey-600);
+      font-size: 11px;
+      line-height: 1.35;
+      margin-top: 2px;
+      font-weight: 600;
+    }
+
+    .doc-check > span:first-of-type {
+      grid-area: copy;
+      min-width: 0;
+    }
+
+    .doc-check .doc-tag {
+      grid-area: tag;
+      justify-self: start;
+      white-space: nowrap;
+      border-radius: 999px;
+      padding: 5px 8px;
+      color: var(--green-950);
+      background: var(--gold-100);
+      border: 1px solid rgba(199, 154, 50, 0.26);
+      font-size: 10px;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .risk-calculator {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(199, 154, 50, 0.34);
+      background:
+        radial-gradient(circle at 100% 0%, rgba(199, 154, 50, 0.18), transparent 18rem),
+        linear-gradient(180deg, #ffffff, #fbfbf8);
+      padding: 18px;
+    }
+
+    .risk-panel {
+      display: grid;
+      grid-template-columns: 145px 1fr;
+      gap: 16px;
+      align-items: center;
+      margin-top: 14px;
+    }
+
+    .risk-score {
+      min-height: 145px;
+      border-radius: 26px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: white;
+      background: var(--green-950);
+      box-shadow: 0 18px 42px rgba(9, 37, 31, 0.16);
+    }
+
+    .risk-score-number {
+      display: block;
+      font-size: 42px;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -0.07em;
+      color: var(--gold-400);
+    }
+
+    .risk-score-label {
+      display: block;
+      margin-top: 7px;
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .risk-form {
+      display: grid;
+      gap: 10px;
+    }
+
+    .risk-row {
+      display: grid;
+      grid-template-columns: 1fr 135px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .risk-row label {
+      color: var(--green-950);
+      font-size: 12px;
+      line-height: 1.4;
+      font-weight: 850;
+    }
+
+    .risk-row select {
+      min-height: 38px;
+      border-radius: 13px;
+      border: 1px solid var(--grey-300);
+      background: white;
+      color: var(--grey-800);
+      font-weight: 800;
+      padding: 0 10px;
+      outline: none;
+    }
+
+    .risk-result {
+      margin-top: 14px;
+      border-radius: 18px;
+      border: 1px solid var(--grey-300);
+      background: rgba(255, 255, 255, 0.72);
+      padding: 13px;
+      color: var(--grey-600);
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 560;
+    }
+
+    .risk-result strong {
+      color: var(--green-950);
+      font-weight: 950;
+    }
+
+
+
+
+
+    .review-workflow {
+      margin-top: 18px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(199, 154, 50, 0.34);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(216, 177, 90, 0.20), transparent 20rem),
+        linear-gradient(135deg, rgba(9, 37, 31, 0.07), rgba(255, 255, 255, 0.82));
+      padding: 18px;
+    }
+
+    .access-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .access-button {
+      border: 1px solid rgba(199, 154, 50, 0.30);
+      border-radius: 999px;
+      padding: 10px 13px;
+      background: rgba(255, 255, 255, 0.74);
+      color: var(--grey-600);
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 950;
+      transition: 180ms ease;
+    }
+
+    .access-button:hover,
+    .access-button.active {
+      color: var(--gold-400);
+      background: var(--green-950);
+      border-color: var(--green-950);
+      transform: translateY(-1px);
+    }
+
+    .review-stage-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .review-stage {
+      position: relative;
+      border-radius: 22px;
+      border: 1px solid rgba(216, 221, 224, 0.92);
+      background: rgba(255, 255, 255, 0.82);
+      padding: 15px;
+      min-height: 172px;
+      box-shadow: 0 12px 28px rgba(9, 37, 31, 0.055);
+      overflow: hidden;
+    }
+
+    .review-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 5px;
+      background: var(--grey-300);
+    }
+
+    .review-stage.closed::before {
+      background: var(--gold-500);
+    }
+
+    .review-stage.active-access {
+      border-color: rgba(199, 154, 50, 0.68);
+      box-shadow: 0 18px 42px rgba(9, 37, 31, 0.10);
+    }
+
+    .review-stage.locked {
+      opacity: 0.64;
+    }
+
+    .review-stage h4 {
+      margin: 0 0 8px;
+      color: var(--green-950);
+      font-size: 15px;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .review-stage p {
+      margin: 0;
+      color: var(--grey-600);
+      font-size: 12px;
+      line-height: 1.48;
+      font-weight: 560;
+    }
+
+    .stage-meta {
+      display: grid;
+      gap: 7px;
+      margin-top: 13px;
+      font-size: 11px;
+      color: var(--grey-600);
+      font-weight: 780;
+    }
+
+    .stage-meta strong {
+      color: var(--green-950);
+      font-weight: 950;
+    }
+
+    .review-action-panel {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr 190px;
+      gap: 14px;
+      align-items: stretch;
+      border-radius: 22px;
+      border: 1px solid rgba(216, 221, 224, 0.94);
+      background: rgba(255, 255, 255, 0.78);
+      padding: 14px;
+    }
+
+    .access-title {
+      margin: 0;
+      color: var(--green-950);
+      font-size: 15px;
+      font-weight: 950;
+      line-height: 1.25;
+    }
+
+    .access-copy {
+      margin: 7px 0 0;
+      color: var(--grey-600);
+      font-size: 12px;
+      line-height: 1.55;
+      font-weight: 560;
+    }
+
+    .permission-list {
+      display: grid;
+      gap: 7px;
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .permission-list li {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      color: var(--grey-800);
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .permission-list li::before {
+      content: "✓";
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 17px;
+      height: 17px;
+      border-radius: 999px;
+      color: var(--green-950);
+      background: var(--gold-100);
+      font-size: 11px;
+      font-weight: 950;
+    }
+
+    .close-review-btn {
+      align-self: center;
+      min-height: 46px;
+      border: 0;
+      border-radius: 999px;
+      padding: 0 16px;
+      color: var(--gold-400);
+      background: var(--green-950);
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 950;
+      box-shadow: 0 14px 30px rgba(9, 37, 31, 0.14);
+      transition: 180ms ease;
+    }
+
+    .close-review-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(9, 37, 31, 0.18);
+    }
+
+    .close-review-btn:disabled {
+      cursor: not-allowed;
+      color: var(--grey-600);
+      background: var(--grey-150);
+      box-shadow: none;
+    }
+
+    .review-seal {
+      margin-top: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(199, 154, 50, 0.30);
+      background: var(--gold-100);
+      padding: 13px;
+      color: var(--green-950);
+      font-size: 12px;
+      line-height: 1.55;
+      font-weight: 760;
+    }
+
+
+    @media (max-width: 980px) {
+      .view-controls { align-items: flex-start; flex-direction: column; }
+      .view-helper { text-align: left; }
+      .view-toggle-group { width: 100%; }
+      .view-toggle { flex: 1; }
+    }
+
+    @media (max-width: 620px) {
+      .view-controls, .block-switcher { padding-left: 18px; padding-right: 18px; }
+      .block-button { flex: 1 1 calc(50% - 8px); }
+    }
+
+    @media (max-width: 980px) {
+      .verification-layout,
+      .risk-panel,
+      .verification-mini-grid {
+        grid-template-columns: 1fr;
+      }
+      .doc-checklist {
+        grid-template-columns: 1fr;
+      }
+      .doc-check {
+        grid-template-columns: 24px 1fr;
+        grid-template-areas:
+          "check copy"
+          "tag tag";
+      }
+      .risk-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+
+    .view-controls {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 24px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .view-toggle-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(199, 154, 50, 0.32);
+      background: rgba(255, 255, 255, 0.52);
+      backdrop-filter: blur(16px) saturate(1.2);
+      box-shadow: 0 12px 28px rgba(9, 37, 31, 0.08);
+    }
+
+    .view-toggle {
+      border: 0;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 10px 14px;
+      color: var(--grey-600);
+      background: transparent;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: 0.02em;
+      transition: 180ms ease;
+      white-space: nowrap;
+    }
+
+    .view-toggle:hover,
+    .view-toggle.active {
+      color: var(--gold-400);
+      background: var(--green-950);
+      box-shadow: 0 10px 24px rgba(9, 37, 31, 0.16);
+    }
+
+    .view-helper {
+      color: var(--green-950);
+      font-size: 12px;
+      font-weight: 850;
+      opacity: 0.82;
+      text-align: right;
+    }
+
+    .block-switcher {
+      display: none;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 24px 16px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .block-button {
+      cursor: pointer;
+      border: 1px solid rgba(199, 154, 50, 0.28);
+      border-radius: 999px;
+      padding: 9px 12px;
+      background: rgba(255, 255, 255, 0.58);
+      color: var(--grey-600);
+      font: inherit;
+      font-size: 12px;
+      font-weight: 900;
+      transition: 180ms ease;
+      backdrop-filter: blur(14px) saturate(1.12);
+    }
+
+    .block-button:hover,
+    .block-button.active {
+      color: var(--green-950);
+      background: var(--gold-100);
+      border-color: rgba(199, 154, 50, 0.54);
+      transform: translateY(-1px);
+    }
+
+    body.blocks-view .nav {
+      display: none;
+    }
+
+    body.blocks-view .block-switcher {
+      display: flex;
+    }
+
+    body.blocks-view .hero,
+    body.blocks-view .footer {
+      display: none;
+    }
+
+    body.blocks-view .section.dpp-block {
+      display: none;
+    }
+
+    body.blocks-view .section.dpp-block.active-block {
+      display: block;
+      min-height: calc(100vh - 190px);
+      padding-top: 34px;
+      padding-bottom: 70px;
+    }
+
+    body.blocks-view main {
+      min-height: calc(100vh - 140px);
+    }
+
+    body.blocks-view .section-shell {
+      box-shadow: 0 30px 90px rgba(9, 37, 31, 0.16);
+    }
+
+
+    @media (max-width: 980px) {
+      .review-stage-grid,
+      .review-action-panel {
+        grid-template-columns: 1fr;
+      }
+      .close-review-btn {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+      .reveal, .stagger > * {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+      .bar-fill { width: var(--w); }
+      .network-route, .network-node, .bg-orb { animation: none !important; }
+    }
+
+    @media (max-width: 980px) {
+      .topbar-inner { align-items: flex-start; flex-direction: column; }
+      .nav { width: 100%; }
+      .hero { grid-template-columns: 1fr; padding-top: 46px; }
+      .grid.two, .grid.three, .grid.four, .impact-grid, .chain, .metadata-grid {
+        grid-template-columns: 1fr;
+      }
+      .material-row {
+        grid-template-columns: 1fr;
+      }
+      .passport-card {
+        animation: none;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .hero { padding: 34px 18px 28px; }
+      .section { padding: 26px 18px; }
+      .section-head {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      .passport-meta { grid-template-columns: 1fr; }
+      .qr-large { width: 100%; max-width: 240px; }
+      .doc-checklist { grid-template-columns: 1fr; }
+      .float-object { display: none; }
+    }
+
+
+    /* Final responsive overrides for the view switcher */
+    @media (max-width: 980px) {
+      .view-controls {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .view-helper {
+        text-align: left;
+      }
+      .view-toggle-group {
+        width: 100%;
+      }
+      .view-toggle {
+        flex: 1;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .view-controls,
+      .block-switcher {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+      .block-button {
+        flex: 1 1 calc(50% - 8px);
+      }
+    }
+
+  </style>
+</head>
+<body class="holistic-view">
+  <div class="supply-bg" aria-hidden="true"></div>
+  <div class="progress" id="progress"></div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="#top" class="brand" aria-label="Go to top">
+        <div class="brand-mark">VT</div>
+        <div>
+          <div class="brand-title">Vela Textile DPP</div>
+          <div class="brand-subtitle">VT-CAM-001 · One-page passport</div>
+        </div>
+      </a>
+      <nav class="nav" aria-label="DPP blocks">
+        <a href="#identification">Identification</a>
+        <a href="#origin">Origin</a>
+        <a href="#composition">Composition</a>
+        <a href="#traceability">Traceability</a>
+        <a href="#durability">Durability</a>
+        <a href="#impact">Impact</a>
+        <a href="#end-of-life">End of life</a>
+        <a href="#compliance">Compliance</a>
+        <a href="#metadata">Metadata</a>
+      </nav>
+    </div>
+    <div class="view-controls" aria-label="Prototype view selector">
+      <div class="view-toggle-group" role="group" aria-label="Choose website view">
+        <button class="view-toggle active" type="button" data-view-mode="holistic" aria-pressed="true">Holistic View</button>
+        <button class="view-toggle" type="button" data-view-mode="blocks" aria-pressed="false">DPP Blocks View</button>
+      </div>
+      <div class="view-helper">Switch between the full passport journey and focused block-by-block review.</div>
+    </div>
+    <div class="block-switcher" aria-label="Select a DPP block">
+      <button class="block-button active" type="button" data-block-target="identification">01 Identification</button>
+      <button class="block-button" type="button" data-block-target="origin">02 Origin</button>
+      <button class="block-button" type="button" data-block-target="composition">03 Composition</button>
+      <button class="block-button" type="button" data-block-target="traceability">04 Traceability</button>
+      <button class="block-button" type="button" data-block-target="durability">05 Durability</button>
+      <button class="block-button" type="button" data-block-target="impact">06 Impact</button>
+      <button class="block-button" type="button" data-block-target="end-of-life">07 End of life</button>
+      <button class="block-button" type="button" data-block-target="compliance">08 Compliance</button>
+      <button class="block-button" type="button" data-block-target="metadata">09 Metadata</button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero reveal">
+      <div>
+        <div class="eyebrow hero-gold-text">Digital Product Passport · ESPR-ready structure</div>
+        <h1 class="hero-gold-text">Vela Textile product passport</h1>
+        <p class="hero-gold-text">
+          A simple one-page DPP for a unisex organic cotton T-shirt, structured only around the 9 requested blocks and their canonical fields.
+        </p>
+        <div class="hero-actions">
+          <a class="button secondary" href="#metadata">View URL / QR metadata</a>
+        </div>
+      </div>
+
+      <aside class="passport-card" aria-label="Product passport summary">
+        <div class="passport-top">
+          <div>
+            <span class="tag">Reference · VT-CAM-001</span>
+            <h2 style="margin:16px 0 6px; color:var(--green-950); font-size:28px; line-height:1.05; letter-spacing:-0.04em;">Unisex Organic Cotton T-Shirt</h2>
+            <p style="margin:0; color:var(--grey-600); font-size:14px; line-height:1.5;">60% GOTS organic cotton · 35% recycled polyester · 5% elastane</p>
+          </div>
+          <div class="qr" aria-label="Decorative QR code">
+            <span></span><span></span><span class="light"></span><span></span><span></span>
+            <span></span><span class="light"></span><span class="light"></span><span class="light"></span><span></span>
+            <span class="light"></span><span class="light"></span><span></span><span class="light"></span><span class="light"></span>
+            <span></span><span class="light"></span><span class="light"></span><span></span><span></span>
+            <span></span><span></span><span class="light"></span><span></span><span class="light"></span>
+          </div>
+        </div>
+        <div class="shirt-visual" aria-hidden="true">
+          <svg class="product-diagram" viewBox="0 0 260 180" role="img" aria-label="Technical T-shirt product diagram">
+            <path class="garment-fill" d="M95 26 L112 42 C121 49 139 49 148 42 L165 26 L222 55 L201 94 L174 82 L174 151 L86 151 L86 82 L59 94 L38 55 Z"/>
+            <path class="garment-seam" d="M112 42 C121 58 139 58 148 42"/>
+            <path class="garment-seam" d="M95 26 L86 82"/>
+            <path class="garment-seam" d="M165 26 L174 82"/>
+            <path class="garment-seam" d="M86 151 H174"/>
+            <line class="measurement-line" x1="69" y1="166" x2="191" y2="166"/>
+            <line class="measurement-line" x1="69" y1="161" x2="69" y2="171"/>
+            <line class="measurement-line" x1="191" y1="161" x2="191" y2="171"/>
+            <line class="measurement-line" x1="20" y1="55" x2="20" y2="151"/>
+            <line class="measurement-line" x1="15" y1="55" x2="25" y2="55"/>
+            <line class="measurement-line" x1="15" y1="151" x2="25" y2="151"/>
+            <circle class="node" cx="130" cy="42" r="5"/>
+            <circle class="node" cx="86" cy="106" r="4"/>
+            <circle class="node" cx="174" cy="106" r="4"/>
+            <text x="96" y="176">WIDTH</text>
+            <text x="0" y="108" transform="rotate(-90 0 108)">LENGTH</text>
+            <text x="104" y="18">VT-CAM-001</text>
+          </svg>
+        </div>
+        <div class="passport-meta">
+          <div class="meta-item">
+            <div class="meta-label">Product UID</div>
+            <div class="meta-value">DPP-VT-CAM-001-2026</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Batch UID</div>
+            <div class="meta-value">BATCH-VT-0426-A</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">GTIN</div>
+            <div class="meta-value">8430000000012</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">SKU</div>
+            <div class="meta-value">VT-CAM-001</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section reveal dpp-block active-block" id="identification">
+      <div class="section-shell">
+        <div class="section-head">
+          <div class="number">01</div>
+          <div>
+            <h2>Identification</h2>
+            <p class="section-desc">Product identifiers that connect the public passport, product catalogue and production batch.</p>
+          </div>
+        </div>
+        <div class="grid four stagger">
+          <div class="field-card" style="--i:0">
+            <div class="label">Product UID</div>
+            <div class="value">DPP-VT-CAM-001-2026</div>
+          </div>
+          <div class="field-card" style="--i:1">
+            <div class="label">Batch UID</div>
+            <div class="value">BATCH-VT-0426-A</div>
+          </div>
+          <div class="field-card" style="--i:2">
+            <div class="label">GTIN</div>
+            <div class="value">8430000000012</div>
+          </div>
+          <div class="field-card" style="--i:3">
+            <div class="label">SKU</div>
+            <div class="value">VT-CAM-001</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal dpp-block" id="origin">
+      <div class="section-shell">
+        <div class="section-head">
+          <div class="number">02</div>
+          <div>
+            <h2>Origin & production</h2>
+            <p class="section-desc">Country, facility, date and multi-tier chain for the 5-stage textile production process.</p>
+          </div>
+        </div>
+        <div class="chain stagger">
+          <div class="stage" style="--i:0">
+            <div class="stage-num">1</div>
+            <h3>Ginning</h3>
+            <p>Country: Türkiye</p>
+            <p>Facility: Anatolia Cotton Processing Ltd.</p>
+            <p>Date: 14 Feb 2026</p>
+          </div>
+          <div class="stage" style="--i:1">
+            <div class="stage-num">2</div>
+            <h3>Spinning</h3>
+            <p>Country: Portugal</p>
+            <p>Facility: Porto Sustainable Yarns SA</p>
+            <p>Date: 21 Feb 2026</p>
+          </div>
+          <div class="stage" style="--i:2">
+            <div class="stage-num">3</div>
+            <h3>Weaving</h3>
+            <p>Country: Morocco</p>
+            <p>Facility: Atlas Weave Factory</p>
+            <p>Date: 03 Mar 2026</p>
+          </div>
+          <div class="stage" style="--i:3">
+            <div class="stage-num">4</div>
+            <h3>Confection</h3>
+            <p>Country: Tunisia</p>
+            <p>Facility: Sahel Garment Works</p>
+            <p>Date: 12 Mar 2026</p>
+          </div>
+          <div class="stage" style="--i:4">
+            <div class="stage-num">5</div>
+            <h3>Finishing</h3>
+            <p>Country: Spain</p>
+            <p>Facility: Valencia Textile Finishers SL</p>
+            <p>Date: 19 Mar 2026</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal dpp-block" id="composition">
+      <div class="section-shell">
+        <div class="section-head">
+          <div class="number">03</div>
+          <div>
+            <h2>Composition</h2>
+            <p class="section-desc">Materials, percentages, fiber origin, chemical treatments and SVHC where applicable.</p>
+          </div>
+        </div>
+        <div class="grid stagger">
+          <div class="material-row" style="--i:0">
+            <div>
+              <div class="label">Material</div>
+              <div class="value">GOTS organic cotton</div>
+              <div class="note">Fiber origin: Türkiye / Portugal</div>
+            </div>
+            <div class="bar" aria-label="60 percent">
+              <div class="bar-fill" style="--w:60%"></div>
+            </div>
+            <div class="value">60%</div>
+          </div>
+          <div class="material-row" style="--i:1">
+            <div>
+              <div class="label">Material</div>
+              <div class="value">Recycled polyester</div>
+              <div class="note">Fiber origin: Portugal</div>
+            </div>
+            <div class="bar" aria-label="35 percent">
+              <div class="bar-fill" style="--w:35%"></div>
+            </div>
+            <div class="value">35%</div>
+          </div>
+          <div class="material-row" style="--i:2">
+            <div>
+              <div class="label">Material</div>
+              <div class="value">Elastane</div>
+              <div class="note">Fiber origin: Spain</div>
+            </div>
+            <div class="bar" aria-label="5 percent">
+              <div class="bar-fill" style="--w:5%"></div>
+            </div>
+            <div class="value">5%</div>
+          </div>
+        </div>
+        <div class="grid two stagger" style="margin-top:14px;">
+          <div class="data-card" style="--i:0">
+            <div class="label">Chemical treatments</div>
+            <div class="value">Dyeing and finishing declared</div>
+          </div>
+          <div class="data-card" style="--i:1">
+            <div class="label">SVHC where applicable</div>
+            <div class="value">No SVHC declared above applicable threshold</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal dpp-block" id="traceability">
+      <div class="section-shell">
+        <div class="section-head">
+          <div class="number">04</div>
+          <div>
+            <h2>Traceability</h2>
+            <p class="section-desc">Chain of custody, certifications and third-party audits.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Traceability field</th>
+                <th>Passport value</th>
+                <th>Supporting reference</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Chain of custody</strong></td>
+                <td>Ginning → spinning → weaving → confection → finishing</td>
+                <td>Batch UID: BATCH-VT-0426-A</td>
+              </tr>
+              <tr>
+                <td><strong>GOTS</strong></td>
+                <td>Organic cotton claim represented</td>
+                <td>Certificate reference: GOTS-VT-2026-014</td>
+              </tr>
+              <tr>
+                <td><strong>OEKO-TEX</strong></td>
+                <td>Chemical safety claim represented</td>
+                <td>Certificate reference: OEK-VT-2026-083</td>
+              </tr>
+              <tr>
+                <td><strong>BCI</strong></td>
+                <td>Not used for this organic cotton product claim</td>
+                <td>Not applicable for this reference</td>
+              </tr>
+              <tr>
+                <td><strong>GRS</strong></td>
+                <td>Recycled polyester claim represented</td>
+                <td>Certificate reference: GRS-VT-2026-041</td>
+              </tr>
+              <tr>
+                <td><strong>Third-party audits</strong></td>
+                <td>Facility and certification audit references attached</td>
+                <td>Audit references: AUD-PT-021 · AUD-TN-034</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal dpp-block" id="durability">
+      <div class="section-shell">
+        <div class="section-head">
+          <div class="number">05</div>
+          <div>
+            <h2>Durability & repairability</h2>
+            <p class="section-desc">Durability index, care, spare parts and repair information.</p>
+          </div>
+        </div>
+        <div class="grid four stagger">
+          <div class="field-card" style="--i:0">
+            <div class="label">Durability index</div>
+            <div class="value">50 washes expected durability</div>
+          </div>
+          <div class="field-card" style="--i:1">
+            <div class="label">Care</div>
+            <div class="value">Wash at 30°C, avoid tumble drying</div>
+          </div>
+          <div class="field-card" style="--i:2">
+            <div class="label">Spare parts</div>
+            <div class="value">Not applicable for this product type</div>
+          </div>
+          <div class="field-card" style="--i:3">
+            <div class="label">Repair</div>
+            <div class="value">Basic seam repair recommended before disposal</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal dpp-block" id="impact">
+      <div class="section-shell">
+        <div class="section-head">
+          <div class="number">06</div>
+          <div>
+            <h2>Environmental impact</h2>
+            <p class="section-desc">Carbon footprint, water footprint, energy, emissions and microplastics.</p>
+          </div>
+        </div>
+        <div class="impact-grid stagger">
+          <div class="impact" style="--i:0">
+            <div class="impact-value">8.5</div>
+            <div class="impact-unit">kg CO₂eq</div>
+            <div class="impact-label">Carbon footprint</div>
+          </div>
+          <div class="impact" style="--i:1">
+            <div class="impact-value">1,200</div>
+            <div class="impact-unit">L H₂O</div>
+            <div class="impact-label">Water footprint</div>
+          </div>
+          <div class="impact" style="--i:2">
+            <div class="impact-value">12</div>
+            <div class="impact-unit">kWh</div>
+            <div class="impact-label">Energy</div>
+          </div>
+          <div class="impact" style="--i:3">
+            <div class="impact-value">Declared</div>
+            <div class="impact-unit">production</div>
+            <div class="impact-label">Emissions</div>
+          </div>
+          <div class="impact" style="--i:4">
+            <div class="impact-value">Relevant</div>
+            <div class="impact-unit">polyester / elastane</div>
+            <div class="impact-label">Microplastics</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal dpp-block" id="end-of-life">
+      <div class="section-shell">
+        <div class="section-head">
+          <div class="number">07</div>
+          <div>
+            <h2>End of life</h2>
+            <p class="section-desc">Recyclability, compostability, disposal and nearby collection operators.</p>
+          </div>
+        </div>
+        <div class="grid four stagger">
+          <div class="field-card" style="--i:0">
+            <div class="label">Recyclability</div>
+            <div class="value">Partially recyclable</div>
+            <div class="note">Blended fibers require specialized textile recycling.</div>
+          </div>
+          <div class="field-card" style="--i:1">
+            <div class="label">Compostability</div>
+            <div class="value">Not compostable</div>
+            <div class="note">Contains recycled polyester and elastane.</div>
+          </div>
+          <div class="field-card" style="--i:2">
+            <div class="label">Disposal</div>
+            <div class="value">Use textile collection point</div>
+            <div class="note">Do not place in organic waste.</div>
+          </div>
+          <div class="field-card" style="--i:3">
+            <div class="label">Nearby collection operators</div>
+            <div class="value">Location-based collection lookup</div>
+            <div class="note">Shown through public DPP URL / QR.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal dpp-block" id="compliance">
+      <div class="section-shell">
+        <div class="section-head">
+          <div class="number">08</div>
+          <div>
+            <h2>Compliance</h2>
+            <p class="section-desc">REACH, CSRD where applicable and EUDR where applicable, with a low-friction certification verification layer inspired by KYC / CLM evidence review.</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Requirement</th>
+                <th>Applicability</th>
+                <th>Passport representation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>REACH</strong></td>
+                <td>Applicable</td>
+                <td>Chemical declaration and SVHC statement represented.</td>
+              </tr>
+              <tr>
+                <td><strong>CSRD</strong></td>
+                <td>Where applicable</td>
+                <td>Company-level reporting linkage represented where required.</td>
+              </tr>
+              <tr>
+                <td><strong>EUDR</strong></td>
+                <td>Where applicable</td>
+                <td>Origin and supplier data available for applicability assessment.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="verification-layout">
+          <div class="verification-card">
+            <h3 class="verification-title">Certification identification</h3>
+            <p class="verification-copy">The DPP uses a three-layer review model: external certificates evidence the claim, while Line 1, Quality Control and Final Audit close the internal DPP case sequentially. Dates are recorded only when each reviewer closes their own step.</p>
+            <div class="table-wrap" style="margin-top:14px;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Claim</th>
+                    <th>External certificate</th>
+                    <th>Internal review path</th>
+                    <th>Current confidence</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>60% organic cotton</strong></td>
+                    <td>GOTS certification body · 12 Feb 2026</td>
+                    <td>Line 1 validates UID/batch match → QC confirms evidence quality → Final Audit approves publication</td>
+                    <td><span class="confidence-chip high">High</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Chemical safety</strong></td>
+                    <td>OEKO-TEX certification body · 20 Feb 2026</td>
+                    <td>Line 1 attaches certificate → QC checks validity and scope → Final Audit confirms public claim wording</td>
+                    <td><span class="confidence-chip high">High</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>35% recycled polyester</strong></td>
+                    <td>GRS certification body + supplier declaration · 18 Feb 2026</td>
+                    <td>Line 1 collects evidence → QC requests batch-level match → Final Audit releases only after QC closure</td>
+                    <td><span class="confidence-chip medium">Medium</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Chain of custody</strong></td>
+                    <td>Third-party audit + internal review · 25 Feb 2026</td>
+                    <td>Line 1 maps stages → QC challenges gaps → Final Audit checks end-to-end evidentiary trail</td>
+                    <td><span class="confidence-chip medium">Medium</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="verification-subsection">
+              <h3 class="verification-title">Verification documentation checklist</h3>
+              <p class="verification-copy">A compact evidence checklist mirrors onboarding controls: collect only what changes the confidence level, show gaps clearly, and avoid unnecessary friction.</p>
+              <div class="doc-checklist" id="docChecklist">
+                <label class="doc-check">
+                  <input type="checkbox" checked data-doc-check>
+                  <span><strong>Product UID + batch UID match</strong><span>DPP-VT-CAM-001-2026 / BATCH-VT-0426-A</span></span>
+                  <span class="doc-tag">ID</span>
+                </label>
+                <label class="doc-check">
+                  <input type="checkbox" checked data-doc-check>
+                  <span><strong>GOTS certificate attached</strong><span>Organic cotton claim and valid date checked</span></span>
+                  <span class="doc-tag">Cert</span>
+                </label>
+                <label class="doc-check">
+                  <input type="checkbox" checked data-doc-check>
+                  <span><strong>OEKO-TEX certificate attached</strong><span>Chemical safety claim represented</span></span>
+                  <span class="doc-tag">Cert</span>
+                </label>
+                <label class="doc-check">
+                  <input type="checkbox" checked data-doc-check>
+                  <span><strong>GRS certificate attached</strong><span>Recycled polyester claim represented</span></span>
+                  <span class="doc-tag">Cert</span>
+                </label>
+                <label class="doc-check">
+                  <input type="checkbox" checked data-doc-check>
+                  <span><strong>REACH / SVHC declaration attached</strong><span>Chemical declaration and threshold statement</span></span>
+                  <span class="doc-tag">REACH</span>
+                </label>
+                <label class="doc-check">
+                  <input type="checkbox" data-doc-check>
+                  <span><strong>Batch-level supplier audit match</strong><span>Pending for finishing-stage evidence</span></span>
+                  <span class="doc-tag">Audit</span>
+                </label>
+              </div>
+              <div class="verification-mini-grid">
+                <div class="mini-metric">
+                  <div class="metric-value" id="docComplete">5/6</div>
+                  <div class="metric-label">documents checked</div>
+                </div>
+                <div class="mini-metric">
+                  <div class="metric-value" id="docPercent">83%</div>
+                  <div class="metric-label">evidence completeness</div>
+                </div>
+                <div class="mini-metric">
+                  <div class="metric-value" id="docGap">1</div>
+                  <div class="metric-label">open evidence gap</div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="verification-subsection">
+              <h3 class="verification-title">Role-based access and closure workflow</h3>
+              <p class="verification-copy">This is the concrete KYC / CLM-inspired control: reviewers have different access rights and the case only moves forward when the previous reviewer closes their own step. The review date is recorded at closure.</p>
+              <div class="review-workflow" id="reviewWorkflow">
+                <div class="access-selector" role="group" aria-label="Reviewer access selector">
+                  <button class="access-button active" type="button" data-review-role="line1">Line 1 Analyst</button>
+                  <button class="access-button" type="button" data-review-role="qc">Quality Control Analyst</button>
+                  <button class="access-button" type="button" data-review-role="audit">Final Audit Checks</button>
+                </div>
+
+                <div class="review-stage-grid" aria-label="Sequential review stages">
+                  <div class="review-stage active-access" data-stage="line1">
+                    <h4>Line 1 Analyst</h4>
+                    <p>Collects documents, matches UID / batch UID and confirms the claim has minimum evidence.</p>
+                    <div class="stage-meta">
+                      <span>Status: <strong data-stage-status="line1">Open</strong></span>
+                      <span>Review date: <strong data-stage-date="line1">Not closed yet</strong></span>
+                      <span>Access: <strong>Edit checklist + close Line 1</strong></span>
+                    </div>
+                  </div>
+                  <div class="review-stage locked" data-stage="qc">
+                    <h4>Quality Control Analyst</h4>
+                    <p>Reviews Line 1 evidence quality, challenges gaps and confirms the confidence level.</p>
+                    <div class="stage-meta">
+                      <span>Status: <strong data-stage-status="qc">Locked</strong></span>
+                      <span>Review date: <strong data-stage-date="qc">Waiting for Line 1 closure</strong></span>
+                      <span>Access: <strong>Review + challenge + close QC</strong></span>
+                    </div>
+                  </div>
+                  <div class="review-stage locked" data-stage="audit">
+                    <h4>Final Audit Checks</h4>
+                    <p>Checks end-to-end evidence, auditability and whether the public DPP claim can be released.</p>
+                    <div class="stage-meta">
+                      <span>Status: <strong data-stage-status="audit">Locked</strong></span>
+                      <span>Review date: <strong data-stage-date="audit">Waiting for QC closure</strong></span>
+                      <span>Access: <strong>Final approval + publication gate</strong></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="review-action-panel">
+                  <div>
+                    <h4 class="access-title" id="accessTitle">Accessing as Line 1 Analyst</h4>
+                    <p class="access-copy" id="accessCopy">Can edit the documentation checklist, verify product UID / batch UID match, attach certificates and close the initial evidence review.</p>
+                    <ul class="permission-list" id="permissionList">
+                      <li>Edit identification and documentation checklist.</li>
+                      <li>Confirm certificate presence and validity date.</li>
+                      <li>Close Line 1 only; cannot approve final DPP publication.</li>
+                    </ul>
+                  </div>
+                  <button class="close-review-btn" type="button" id="closeReviewBtn">Close Line 1 review</button>
+                </div>
+
+                <div class="review-seal" id="reviewSeal">
+                  Current gate: Line 1 evidence review is open. QC and Final Audit remain locked until the previous step is closed.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="risk-calculator" style="margin-top:16px;">
+          <h3 class="verification-title">Risk-based approach calculator</h3>
+          <p class="verification-copy">The calculator converts the verification layer into an operational decision: high-confidence claims need light monitoring; medium-confidence claims need evidence refresh; low-confidence claims need escalation before publication.</p>
+          <div class="risk-panel">
+            <div class="risk-score" aria-live="polite">
+              <div>
+                <span class="risk-score-number" id="riskScore">34</span>
+                <span class="risk-score-label" id="riskLevel">Medium</span>
+              </div>
+            </div>
+            <div>
+              <div class="risk-form" id="riskForm">
+                <div class="risk-row">
+                  <label for="evidenceCompleteness">Evidence completeness</label>
+                  <select id="evidenceCompleteness" data-risk>
+                    <option value="5">Complete</option>
+                    <option value="15" selected>Minor gaps</option>
+                    <option value="30">Material gaps</option>
+                  </select>
+                </div>
+                <div class="risk-row">
+                  <label for="certifierIndependence">Certifier independence</label>
+                  <select id="certifierIndependence" data-risk>
+                    <option value="5" selected>Third-party</option>
+                    <option value="15">Mixed</option>
+                    <option value="30">Self-declared</option>
+                  </select>
+                </div>
+                <div class="risk-row">
+                  <label for="batchMatch">Product / batch match</label>
+                  <select id="batchMatch" data-risk>
+                    <option value="5">Exact match</option>
+                    <option value="14" selected>Partial match</option>
+                    <option value="28">No batch match</option>
+                  </select>
+                </div>
+                <div class="risk-row">
+                  <label for="expiryStatus">Certificate date / expiry</label>
+                  <select id="expiryStatus" data-risk>
+                    <option value="4" selected>Valid</option>
+                    <option value="14">Expires soon</option>
+                    <option value="26">Expired / unclear</option>
+                  </select>
+                </div>
+                <div class="risk-row">
+                  <label for="regulatoryExposure">Regulatory exposure</label>
+                  <select id="regulatoryExposure" data-risk>
+                    <option value="5">Low</option>
+                    <option value="12" selected>Medium</option>
+                    <option value="24">High</option>
+                  </select>
+                </div>
+              </div>
+              <div class="risk-result" id="riskResult">
+                <strong>Recommended action:</strong> request batch-level supplier audit match, then publish with medium confidence and review by 30 Sep 2026.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal dpp-block" id="metadata">
+      <div class="section-shell">
+        <div class="section-head">
+          <div class="number">09</div>
+          <div>
+            <h2>Metadata</h2>
+            <p class="section-desc">Issue date, last update, responsible economic operator and URL / QR.</p>
+          </div>
+        </div>
+        <div class="grid metadata-grid stagger">
+          <div class="qr-large" aria-label="Decorative public QR code" style="--i:0">
+            <span></span><span></span><span></span><span class="light"></span><span></span><span></span><span></span>
+            <span></span><span class="light"></span><span></span><span class="light"></span><span></span><span class="light"></span><span></span>
+            <span></span><span></span><span></span><span class="light"></span><span></span><span></span><span></span>
+            <span class="light"></span><span class="light"></span><span class="light"></span><span></span><span class="light"></span><span></span><span class="light"></span>
+            <span></span><span></span><span class="light"></span><span class="light"></span><span></span><span class="light"></span><span></span>
+            <span></span><span class="light"></span><span></span><span></span><span class="light"></span><span></span><span class="light"></span>
+            <span></span><span></span><span></span><span class="light"></span><span></span><span></span><span></span>
+          </div>
+          <div class="grid two">
+            <div class="field-card" style="--i:1">
+              <div class="label">Issue date</div>
+              <div class="value">01 Jun 2026</div>
+            </div>
+            <div class="field-card" style="--i:2">
+              <div class="label">Last update</div>
+              <div class="value">10 Jun 2026</div>
+            </div>
+            <div class="field-card" style="--i:3">
+              <div class="label">Responsible economic operator</div>
+              <div class="value">Vela Textile S.L.</div>
+            </div>
+            <div class="field-card" style="--i:4">
+              <div class="label">URL / QR</div>
+              <div class="value">dpp.velatextile.example/VT-CAM-001</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      Fictional Digital Product Passport prototype for the TraceWeave case. All values are illustrative and limited to the 9 requested DPP blocks.
+    </div>
+  </main>
+
+  <script>
+    const progress = document.getElementById("progress");
+    const navLinks = Array.from(document.querySelectorAll(".nav a"));
+    const revealItems = Array.from(document.querySelectorAll(".reveal"));
+    const viewButtons = Array.from(document.querySelectorAll("[data-view-mode]"));
+    const blockButtons = Array.from(document.querySelectorAll("[data-block-target]"));
+    const dppBlocks = Array.from(document.querySelectorAll(".dpp-block"));
+    let activeBlockId = "identification";
+
+    function setActiveBlock(blockId, shouldScroll = true) {
+      activeBlockId = blockId;
+      dppBlocks.forEach((section) => {
+        const isActive = section.id === blockId;
+        section.classList.toggle("active-block", isActive);
+        if (isActive) section.classList.add("is-visible");
+      });
+      blockButtons.forEach((button) => {
+        const isActive = button.dataset.blockTarget === blockId;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
+      });
+      navLinks.forEach((link) => {
+        link.classList.toggle("active", link.getAttribute("href") === "#" + blockId);
+      });
+      if (shouldScroll && document.body.classList.contains("blocks-view")) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    function setViewMode(mode) {
+      const isBlocks = mode === "blocks";
+      document.body.classList.toggle("blocks-view", isBlocks);
+      document.body.classList.toggle("holistic-view", !isBlocks);
+      viewButtons.forEach((button) => {
+        const isActive = button.dataset.viewMode === mode;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
+      });
+      if (isBlocks) {
+        setActiveBlock(activeBlockId, false);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        dppBlocks.forEach((section) => section.style.removeProperty("display"));
+      }
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progress.style.width = pct + "%";
+    }
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+        }
+      });
+    }, { threshold: 0.16 });
+
+    revealItems.forEach((item) => revealObserver.observe(item));
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const id = entry.target.getAttribute("id");
+        navLinks.forEach((link) => {
+          link.classList.toggle("active", link.getAttribute("href") === "#" + id);
+        });
+      });
+    }, { rootMargin: "-32% 0px -58% 0px", threshold: 0.01 });
+
+    document.querySelectorAll("section[id]").forEach((section) => sectionObserver.observe(section));
+
+    viewButtons.forEach((button) => {
+      button.addEventListener("click", () => setViewMode(button.dataset.viewMode));
+    });
+
+    blockButtons.forEach((button) => {
+      button.addEventListener("click", () => setActiveBlock(button.dataset.blockTarget));
+    });
+
+    navLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        if (!document.body.classList.contains("blocks-view")) return;
+        event.preventDefault();
+        setActiveBlock(link.getAttribute("href").slice(1));
+      });
+    });
+
+    setActiveBlock(activeBlockId, false);
+
+    const docChecks = Array.from(document.querySelectorAll("[data-doc-check]"));
+    const docComplete = document.getElementById("docComplete");
+    const docPercent = document.getElementById("docPercent");
+    const docGap = document.getElementById("docGap");
+    const riskInputs = Array.from(document.querySelectorAll("[data-risk]"));
+    const riskScore = document.getElementById("riskScore");
+    const riskLevel = document.getElementById("riskLevel");
+    const riskResult = document.getElementById("riskResult");
+
+    function updateDocumentationChecklist() {
+      if (!docChecks.length) return;
+      const checked = docChecks.filter((item) => item.checked).length;
+      const total = docChecks.length;
+      const pct = Math.round((checked / total) * 100);
+      docComplete.textContent = checked + "/" + total;
+      docPercent.textContent = pct + "%";
+      docGap.textContent = String(total - checked);
+    }
+
+    function updateRiskCalculator() {
+      if (!riskInputs.length) return;
+      const raw = riskInputs.reduce((sum, input) => sum + Number(input.value || 0), 0);
+      const score = Math.max(0, Math.min(100, raw));
+      let level = "Low";
+      let action = "publish with high confidence and monitor at the next standard review.";
+      if (score >= 35 && score < 65) {
+        level = "Medium";
+        action = "request targeted evidence refresh, then publish with medium confidence and a dated review point.";
+      } else if (score >= 65) {
+        level = "High";
+        action = "escalate before publication and block unsupported sustainability claims until evidence is complete.";
+      }
+      riskScore.textContent = String(score);
+      riskLevel.textContent = level;
+      riskResult.innerHTML = "<strong>Recommended action:</strong> " + action;
+    }
+
+    docChecks.forEach((item) => item.addEventListener("change", updateDocumentationChecklist));
+    riskInputs.forEach((item) => item.addEventListener("change", updateRiskCalculator));
+    updateDocumentationChecklist();
+    updateRiskCalculator();
+
+
+    const reviewRoleButtons = Array.from(document.querySelectorAll("[data-review-role]"));
+    const reviewStages = Array.from(document.querySelectorAll("[data-stage]"));
+    const stageStatus = (role) => document.querySelector(`[data-stage-status="${role}"]`);
+    const stageDate = (role) => document.querySelector(`[data-stage-date="${role}"]`);
+    const accessTitle = document.getElementById("accessTitle");
+    const accessCopy = document.getElementById("accessCopy");
+    const permissionList = document.getElementById("permissionList");
+    const closeReviewBtn = document.getElementById("closeReviewBtn");
+    const reviewSeal = document.getElementById("reviewSeal");
+
+    const reviewState = {
+      activeRole: "line1",
+      line1: { closed: false, date: null },
+      qc: { closed: false, date: null },
+      audit: { closed: false, date: null }
+    };
+
+    const roleContent = {
+      line1: {
+        title: "Accessing as Line 1 Analyst",
+        copy: "Can edit the documentation checklist, verify product UID / batch UID match, attach certificates and close the initial evidence review.",
+        permissions: [
+          "Edit identification and documentation checklist.",
+          "Confirm certificate presence and validity date.",
+          "Close Line 1 only; cannot approve final DPP publication."
+        ],
+        button: "Close Line 1 review"
+      },
+      qc: {
+        title: "Accessing as Quality Control Analyst",
+        copy: "Can review Line 1 decisions, challenge missing evidence, adjust confidence level and close QC only after Line 1 has closed.",
+        permissions: [
+          "Read Line 1 checklist and evidence decisions.",
+          "Challenge gaps such as missing batch-level supplier audit match.",
+          "Close QC review only; cannot bypass Final Audit checks."
+        ],
+        button: "Close QC review"
+      },
+      audit: {
+        title: "Accessing as Final Audit Checks",
+        copy: "Can perform the final evidentiary trail check, confirm public claim wording and release the DPP only after QC has closed.",
+        permissions: [
+          "Read full evidence trail and prior reviewer closures.",
+          "Confirm auditability, dates, confidence level and public wording.",
+          "Close Final Audit as the publication gate."
+        ],
+        button: "Close Final Audit checks"
+      }
+    };
+
+    function formatReviewDate() {
+      return new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" }).format(new Date());
+    }
+
+    function roleUnlocked(role) {
+      if (role === "line1") return true;
+      if (role === "qc") return reviewState.line1.closed;
+      if (role === "audit") return reviewState.qc.closed;
+      return false;
+    }
+
+    function updateReviewWorkflow() {
+      if (!reviewRoleButtons.length) return;
+      const active = reviewState.activeRole;
+      reviewRoleButtons.forEach((button) => {
+        const role = button.dataset.reviewRole;
+        const isActive = role === active;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
+      });
+
+      reviewStages.forEach((stage) => {
+        const role = stage.dataset.stage;
+        const closed = reviewState[role].closed;
+        const unlocked = roleUnlocked(role);
+        stage.classList.toggle("closed", closed);
+        stage.classList.toggle("locked", !unlocked);
+        stage.classList.toggle("active-access", role === active);
+        if (stageStatus(role)) stageStatus(role).textContent = closed ? "Closed" : unlocked ? "Open" : "Locked";
+        if (stageDate(role)) {
+          if (closed) stageDate(role).textContent = reviewState[role].date;
+          else if (role === "line1") stageDate(role).textContent = "Not closed yet";
+          else if (role === "qc") stageDate(role).textContent = "Waiting for Line 1 closure";
+          else stageDate(role).textContent = "Waiting for QC closure";
+        }
+      });
+
+      const content = roleContent[active];
+      if (accessTitle) accessTitle.textContent = content.title;
+      if (accessCopy) accessCopy.textContent = content.copy;
+      if (permissionList) permissionList.innerHTML = content.permissions.map((item) => `<li>${item}</li>`).join("");
+      if (closeReviewBtn) {
+        closeReviewBtn.textContent = reviewState[active].closed ? "Review already closed" : content.button;
+        closeReviewBtn.disabled = reviewState[active].closed || !roleUnlocked(active);
+      }
+
+      if (reviewSeal) {
+        if (reviewState.audit.closed) {
+          reviewSeal.textContent = "Publication gate closed: Line 1, QC and Final Audit checks are complete. The DPP claim can be released with recorded evidence dates.";
+        } else if (reviewState.qc.closed) {
+          reviewSeal.textContent = "Current gate: Final Audit Checks are unlocked. Publication remains blocked until Final Audit closes the case.";
+        } else if (reviewState.line1.closed) {
+          reviewSeal.textContent = "Current gate: QC review is unlocked. Final Audit remains locked until QC closes the case.";
+        } else {
+          reviewSeal.textContent = "Current gate: Line 1 evidence review is open. QC and Final Audit remain locked until the previous step is closed.";
+        }
+      }
+    }
+
+    reviewRoleButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        reviewState.activeRole = button.dataset.reviewRole;
+        updateReviewWorkflow();
+      });
+    });
+
+    if (closeReviewBtn) {
+      closeReviewBtn.addEventListener("click", () => {
+        const role = reviewState.activeRole;
+        if (!roleUnlocked(role) || reviewState[role].closed) return;
+        reviewState[role].closed = true;
+        reviewState[role].date = formatReviewDate();
+        if (role === "line1") reviewState.activeRole = "qc";
+        if (role === "qc") reviewState.activeRole = "audit";
+        updateReviewWorkflow();
+      });
+    }
+
+    updateReviewWorkflow();
+
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    updateProgress();
+  </script>
+</body>
+</html>
